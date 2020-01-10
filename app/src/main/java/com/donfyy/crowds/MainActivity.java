@@ -52,7 +52,15 @@ public class MainActivity extends FragmentActivity implements HasFragmentInjecto
                         "any biometric credentials with their account.");
                 break;
         }
-
+/*
+        从系统29开始支持脸部识别
+        应用如果要使用脸部识别，第一要升级目标版本29或以上，第二使用androidx中的BiometricPrompt（androidx.biometric.BiometricPrompt）中的Api
+        应用无法选择使用的是脸部识别或指纹识别，由系统决定使用哪一种，如果都有的话
+        android.hardware.biometrics.BiometricPrompt从28开始引入，由系统提供指纹识别的对话框，但是有兼容问题
+                这也是为啥velo自定义该对话框
+        但是从29开始该对话框无兼容问题，因为这个对话框是有androidx提供打包到app里的
+        https://source.android.com/security/biometric/face-authentication
+        */
         executor = ContextCompat.getMainExecutor(this);
         biometricPrompt = new BiometricPrompt(MainActivity.this,
                 executor, new BiometricPrompt.AuthenticationCallback() {
