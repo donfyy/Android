@@ -1,0 +1,4 @@
+<resources>
+    <string name="hello_world">你好</string>
+    <string name="switch_language">switch</string>
+</resources>
