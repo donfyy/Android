@@ -1,26 +1,21 @@
 package com.donfyy.crowds;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
-import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasFragmentInjector;
 
-public class MainActivity extends FragmentActivity implements HasFragmentInjector {
+public class MainActivity extends Activity implements HasFragmentInjector {
     private static final String MY_APP_TAG = "MY_APP_TAG";
     //    private static final String MY_APP_TAG = MainActivity.class.getSimpleName();
     @Inject
@@ -36,6 +31,14 @@ public class MainActivity extends FragmentActivity implements HasFragmentInjecto
         setContentView(R.layout.activity_main);
         Log.e(this.getClass().getSimpleName(), "injected!" + mAppComponentA);
 
+        getFragmentManager().beginTransaction()
+                .replace(R.id.activity_container, new L1Fragment())
+                .commit();
+
+//        biometric();
+    }
+
+    /*private void biometric() {
         BiometricManager biometricManager = BiometricManager.from(this);
         switch (biometricManager.canAuthenticate()) {
             case BiometricManager.BIOMETRIC_SUCCESS:
@@ -52,14 +55,14 @@ public class MainActivity extends FragmentActivity implements HasFragmentInjecto
                         "any biometric credentials with their account.");
                 break;
         }
-/*
+*//*
         从系统29开始支持脸部识别
         应用如果要使用脸部识别，第一要升级目标版本29或以上，第二使用androidx中的BiometricPrompt（androidx.biometric.BiometricPrompt）中的Api
         应用无法选择使用的是脸部识别或指纹识别，由系统决定使用哪一种，如果都有的话
         android.hardware.biometrics.BiometricPrompt从28开始引入，由系统提供指纹识别的对话框，但是有兼容问题
         但是从29开始该对话框无兼容问题，因为这个对话框是有androidx提供打包到app里的
         https://source.android.com/security/biometric/face-authentication
-        */
+        *//*
         executor = ContextCompat.getMainExecutor(this);
         biometricPrompt = new BiometricPrompt(MainActivity.this,
                 executor, new BiometricPrompt.AuthenticationCallback() {
@@ -103,7 +106,7 @@ public class MainActivity extends FragmentActivity implements HasFragmentInjecto
         biometricLoginButton.setOnClickListener(view -> {
             biometricPrompt.authenticate(promptInfo);
         });
-    }
+    }*/
 
 
     @Inject
