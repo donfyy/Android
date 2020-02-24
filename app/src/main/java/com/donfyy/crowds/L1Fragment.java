@@ -24,6 +24,7 @@ public class L1Fragment extends DaggerFragment {
         super.onViewCreated(view, savedInstanceState);
 
         getChildFragmentManager().beginTransaction()
+                .addToBackStack("")
                 .add(R.id.container, new L2Fragment())
                 .commit();
 
