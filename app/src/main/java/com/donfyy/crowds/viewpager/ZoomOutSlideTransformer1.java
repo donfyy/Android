@@ -11,6 +11,7 @@ public class ZoomOutSlideTransformer1 implements ViewPager.PageTransformer {
     @Override
     public void transformPage(@NonNull View page, float position) {
         ViewPager viewPager = (ViewPager) page.getParent();
+//        note:position is reevaluated as previous evaluation not consider the padding left value of ViewPager
         float adjustedPosition = (((float) (page.getLeft() - viewPager.getPaddingLeft() - viewPager.getScrollX())))
                 / (page.getWidth());
 
