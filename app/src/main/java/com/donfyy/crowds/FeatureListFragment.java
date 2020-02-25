@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.donfyy.crowds.viewpager.ViewPagerFragment;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the

@@ -2,11 +2,14 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.donfyy.crowds.ViewPagerFragment">
+             tools:context="com.donfyy.crowds.viewpager.ViewPagerFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="300dp"/>
+        android:layout_height="190dp"
+        android:clipToPadding="false"
+        android:paddingLeft="36dp"
+        android:paddingRight="36dp"/>
 </FrameLayout>

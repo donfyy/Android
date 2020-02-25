@@ -1,17 +1,16 @@
-package com.donfyy.crowds;
+package com.donfyy.crowds.viewpager;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ToxicBakery.viewpager.transforms.ZoomOutSlideTransformer;
+import com.donfyy.crowds.R;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -96,12 +95,6 @@ public class ViewPagerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         ViewPager viewPager = view.findViewById(R.id.viewPager);
-        int marginPixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, view.getResources().getDisplayMetrics());
-        int padding = marginPixels * 2;
-        viewPager.setPageMargin(marginPixels);
-        viewPager.setPadding(padding, 0, padding, 0);
-        viewPager.setClipToPadding(false);
-
         viewPager.setAdapter(new PagerAdapterExample());
 //        viewPager.setPageTransformer(true, new RotateUpTransformer());
         viewPager.setPageTransformer(true, new ZoomOutSlideTransformer());

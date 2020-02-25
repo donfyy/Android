@@ -2,7 +2,7 @@ package com.donfyy.crowds.dagger;
 
 import com.donfyy.crowds.FeatureListFragment;
 import com.donfyy.crowds.L1Fragment;
-import com.donfyy.crowds.ViewPagerFragment;
+import com.donfyy.crowds.viewpager.ViewPagerFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
