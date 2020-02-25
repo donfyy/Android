@@ -32,7 +32,7 @@ public class MainActivity extends Activity implements HasFragmentInjector {
         Log.e(this.getClass().getSimpleName(), "injected!" + mAppComponentA);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.activity_container, new L1Fragment())
+                .replace(R.id.activity_container, new FeatureListFragment())
                 .commit();
 
 //        biometric();
