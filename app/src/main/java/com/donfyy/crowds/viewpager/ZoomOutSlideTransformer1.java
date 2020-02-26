@@ -7,6 +7,18 @@ import androidx.viewpager.widget.ViewPager;
 
 public class ZoomOutSlideTransformer1 implements ViewPager.PageTransformer {
     private static final float MIN_SCALE = 0.85f;
+    private static final float MIN_ALPHA = 0.5f;
+
+    private float mMinScale = MIN_SCALE;
+    private float mMinAlpha = MIN_ALPHA;
+
+    public ZoomOutSlideTransformer1() {
+    }
+
+    public ZoomOutSlideTransformer1(float minScale, float minAlpha) {
+        mMinScale = minScale;
+        mMinAlpha = minAlpha;
+    }
 
     @Override
     public void transformPage(@NonNull View page, float position) {
@@ -18,7 +30,7 @@ public class ZoomOutSlideTransformer1 implements ViewPager.PageTransformer {
         int height = page.getHeight();
         int width = page.getWidth();
 
-        float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(adjustedPosition));
+        float scaleFactor = Math.max(mMinScale, 1 - Math.abs(adjustedPosition));
 
         page.setPivotX(0.5f * width);
         page.setPivotY(0.5f * height);
@@ -33,6 +45,8 @@ public class ZoomOutSlideTransformer1 implements ViewPager.PageTransformer {
         } else {
             page.setTranslationX(-horizontalMargin / 2);
         }
+
+        page.setAlpha(mMinAlpha + (scaleFactor - mMinScale) / (1 - mMinScale) * (1 - mMinAlpha));
 
     }
 }

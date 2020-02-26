@@ -97,7 +97,7 @@ public class ViewPagerFragment extends Fragment {
         ViewPager viewPager = view.findViewById(R.id.viewPager);
         viewPager.setAdapter(new PagerAdapterExample());
 //        viewPager.setPageTransformer(true, new RotateUpTransformer());
-        viewPager.setPageTransformer(true, new ZoomOutSlideTransformer());
+        viewPager.setPageTransformer(true, new ZoomOutSlideTransformer1());
 
         super.onViewCreated(view, savedInstanceState);
     }
