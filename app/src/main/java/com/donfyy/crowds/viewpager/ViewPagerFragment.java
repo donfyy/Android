@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.donfyy.crowds.R;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -99,44 +98,14 @@ public class ViewPagerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         ViewPager viewPager = view.findViewById(R.id.viewPager);
+        PagerAdapterExample underlyingPagerAdapter = new PagerAdapterExample();
         view.findViewById(R.id.jump).setOnClickListener(v -> {
-            viewPager.setCurrentItem((viewPager.getCurrentItem() + 2) % viewPager.getAdapter().getCount(), false);
+            underlyingPagerAdapter.setOriginData(Arrays.asList(Color.YELLOW, Color.BLUE, Color.RED, Color.CYAN));
+            underlyingPagerAdapter.notifyDataSetChanged();
         });
-        viewPager.setPageTransformer(true, new ZoomOutSlideTransformer1());
-        viewPager.setAdapter(new PagerAdapterExample(Arrays.asList(Color.YELLOW, Color.BLUE, Color.RED, Color.CYAN)));
-        int firstItemPosition = 2;
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            int mPositionBeforeScroll = firstItemPosition;
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if (ViewPager.SCROLL_STATE_IDLE == state) {
-                    if (viewPager.getCurrentItem() != mPositionBeforeScroll) {
-                        int currentItem = viewPager.getCurrentItem();
-                        mPositionBeforeScroll = currentItem;
-
-                        if (currentItem == 1) {
-                            int item = viewPager.getAdapter().getCount() - firstItemPosition - 1;
-                            viewPager.setCurrentItem(item, false);
-
-                        } else if (currentItem == viewPager.getAdapter().getCount() - 2) {
-                            viewPager.setCurrentItem(firstItemPosition, false);
-                        }
-                    }
-                }
-            }
-        });
-        viewPager.setCurrentItem(firstItemPosition, false);
+        InfiniteLoopPagerAdapter infiniteLoopPagerAdapter = new InfiniteLoopPagerAdapter(underlyingPagerAdapter);
+        infiniteLoopPagerAdapter.assemble(viewPager);
+        viewPager.setPageTransformer(true, new ZoomOutSlideTransformer(infiniteLoopPagerAdapter));
 
         super.onViewCreated(view, savedInstanceState);
     }
@@ -164,36 +133,13 @@ public class ViewPagerFragment extends Fragment {
 
     private static class PagerAdapterExample extends PagerAdapter {
 
-        private List<Integer> mData;
         private List<Integer> mOriginData;
-        private ViewPager.OnPageChangeListener mOnPageChangeListener;
 
-        public PagerAdapterExample(List<Integer> mData) {
-            mOriginData = mData;
-            if (mData.size() >= 3) {
-                ArrayList<Integer> data = new ArrayList<>(mData);
-                data.addAll(0, mData.subList(mData.size() - 2, mData.size()));
-                data.addAll(mData.subList(0, 2));
-                this.mData = data;
-            } else {
-                this.mData = mData;
-            }
-
+        private PagerAdapterExample(List<Integer> originData) {
+            mOriginData = originData;
         }
 
-        private int getOriginPosition(int position) {
-            if (position <= 1) {
-                return position + mOriginData.size() - 2;
-            } else if (position >= mData.size() - 2) {
-                return position - mData.size() + 2;
-            } else {
-                return position - 2;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return mData.size();
+        public PagerAdapterExample() {
         }
 
         @Override
@@ -201,15 +147,23 @@ public class ViewPagerFragment extends Fragment {
             return object == view;
         }
 
+        public void setOriginData(List<Integer> originData) {
+            mOriginData = originData;
+        }
+
+        @Override
+        public int getCount() {
+            return mOriginData != null ? mOriginData.size() : 0;
+        }
+
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             LayoutInflater inflater = LayoutInflater.from(container.getContext());
             View view = inflater.inflate(R.layout.fragment_view_pager_item, container, false);
-            view.setBackgroundColor(mData.get(position));
-            view.setTag(R.id.position, position);
+            view.setBackgroundColor(mOriginData.get(position));
             TextView textView = view.findViewById(R.id.number);
-            textView.setText(String.valueOf(getOriginPosition(position)));
+            textView.setText(String.valueOf(position));
             container.addView(view);
             return view;
         }
