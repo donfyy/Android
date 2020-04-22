@@ -1,6 +1,6 @@
 package com.donfyy.crowds.dagger;
 
-import com.donfyy.crowds.FeatureListFragment;
+import com.donfyy.crowds.MainFragment;
 import com.donfyy.crowds.L1Fragment;
 import com.donfyy.crowds.viewpager.ViewPagerFragment;
 
@@ -14,7 +14,7 @@ public abstract class L1FragmentModule {
     abstract L1Fragment L1Fragment();
 
     @ContributesAndroidInjector()
-    abstract FeatureListFragment FeatureListFragment();
+    abstract MainFragment FeatureListFragment();
 
     @ContributesAndroidInjector()
     abstract ViewPagerFragment ViewPagerFragment();

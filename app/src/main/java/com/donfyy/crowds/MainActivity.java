@@ -3,19 +3,27 @@ package com.donfyy.crowds;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
+
+import com.donfyy.crowds.databinding.ActivityMainBindingImpl;
+
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasFragmentInjector;
 
-public class MainActivity extends Activity implements HasFragmentInjector {
+public class MainActivity extends AppCompatActivity implements HasFragmentInjector {
     private static final String MY_APP_TAG = "MY_APP_TAG";
     //    private static final String MY_APP_TAG = MainActivity.class.getSimpleName();
     @Inject
@@ -23,19 +31,39 @@ public class MainActivity extends Activity implements HasFragmentInjector {
     private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        ActivityMainBindingImpl binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_main, null, false);
+        binding.setLifecycleOwner(this);
+
+        setContentView(binding.getRoot());
         Log.e(this.getClass().getSimpleName(), "injected!" + mAppComponentA);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.activity_container, new FeatureListFragment())
+                .replace(R.id.activity_container, new MainFragment())
                 .commit();
 
+        final User user = new User();
+        binding.setUser(user);
+
+        Handler handler = new Handler();
+        sendMsg(user, handler);
+
+        binding.executePendingBindings();
 //        biometric();
+    }
+
+    private void sendMsg(User user, Handler handler) {
+        handler.postDelayed(() -> {
+            user.mAge.set(user.mAge.get() + 1);
+
+            sendMsg(user, handler);
+        }, TimeUnit.SECONDS.toMillis(1));
     }
 
     /*private void biometric() {

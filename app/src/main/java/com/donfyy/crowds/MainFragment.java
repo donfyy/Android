@@ -13,12 +13,12 @@ import com.donfyy.crowds.viewpager.ViewPagerFragment;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FeatureListFragment.OnFragmentInteractionListener} interface
+ * {@link MainFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FeatureListFragment#newInstance} factory method to
+ * Use the {@link MainFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FeatureListFragment extends Fragment {
+public class MainFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +30,7 @@ public class FeatureListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public FeatureListFragment() {
+    public MainFragment() {
         // Required empty public constructor
     }
 
@@ -43,8 +43,8 @@ public class FeatureListFragment extends Fragment {
      * @return A new instance of fragment FeatureListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FeatureListFragment newInstance(String param1, String param2) {
-        FeatureListFragment fragment = new FeatureListFragment();
+    public static MainFragment newInstance(String param1, String param2) {
+        MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -89,11 +89,11 @@ public class FeatureListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.viewPagerFragment).setOnClickListener(v -> {
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.activity_container, new ViewPagerFragment())
-                    .commit();
-        });
+//        view.findViewById(R.id.viewPagerFragment).setOnClickListener(v -> {
+//            getFragmentManager().beginTransaction()
+//                    .replace(R.id.activity_container, new ViewPagerFragment())
+//                    .commit();
+//        });
     }
 
     @Override
