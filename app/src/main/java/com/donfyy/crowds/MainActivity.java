@@ -1,22 +1,20 @@
 package com.donfyy.crowds;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricPrompt;
+import androidx.databinding.DataBindingUtil;
+
+import com.donfyy.crowds.databinding.ActivityMainBindingImpl;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.biometric.BiometricPrompt;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
-
-import com.donfyy.crowds.databinding.ActivityMainBindingImpl;
 
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
