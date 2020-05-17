@@ -50,18 +50,18 @@ class ViewGroupDemo1 @JvmOverloads constructor(context: Context?, attrs: Attribu
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
 
-        var l = 0
-        var t = 0
+        var left = 0
+        var top = 0
         for (i in 0 until childCount) {
             val child = getChildAt(i)
-            l += offset
+            left += offset
             child.layout(
-                    l,
-                    t,
-                    l + child.measuredWidth,
-                    t + child.measuredHeight
+                    left,
+                    top,
+                    left + child.measuredWidth,
+                    top + child.measuredHeight
             )
-            t += child.measuredHeight
+            top += child.measuredHeight
         }
 
     }
