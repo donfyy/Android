@@ -116,22 +116,20 @@ class FlowLayout @JvmOverloads constructor(context: Context?, attrs: AttributeSe
                     downPoint.set(event.x, event.y)
                 }
             }
-            else -> {
-
+            MotionEvent.ACTION_UP -> {
                 velocityTracker?.computeCurrentVelocity(1000, ViewConfiguration.getMaximumFlingVelocity().toFloat())
                 val yVelocity = velocityTracker?.yVelocity
                 if (yVelocity != null) {
-
-
                     if (abs(yVelocity) > ViewConfiguration.getMinimumFlingVelocity()) {
                         scroller.fling(
-                                scrollX, scrollY, 0, (yVelocity).toInt(), 0, 0, 0, max(0, bottom - height), 0, measuredHeight / 2
+                                scrollX, scrollY, 0, -(yVelocity).toInt(), 0, 0, 0, max(0, bottom - height), 0, measuredHeight / 2
                         )
-                    } else if (scroller.springBack(scrollX, scrollY, 0, 0, 0, contentHeight - measuredHeight)) {
+                    }/* else if (scroller.springBack(scrollX, scrollY, 0, 0, 0, contentHeight - measuredHeight)) {
                         postInvalidateOnAnimation()
-                    }
-
+                    }*/
                 }
+            }
+            else -> {
             }
         }
 
