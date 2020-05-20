@@ -3,10 +3,10 @@ package com.donfyy.viewexample.view
 import android.content.Context
 import android.graphics.Point
 import android.graphics.PointF
+import android.os.Build
 import android.util.AttributeSet
 import android.view.*
 import android.widget.OverScroller
-import android.widget.Scroller
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -15,6 +15,16 @@ class FlowLayout @JvmOverloads constructor(context: Context?, attrs: AttributeSe
     private val rowList = mutableListOf<List<View>>()
     private val rowHeightList = mutableListOf<Int>()
     private var contentHeight = 0
+    private var mTouchSlop = 0
+    private var mMinimumVelocity = 0
+    private var mMaximumVelocity = 0
+
+    init {
+        val configuration = ViewConfiguration.get(getContext())
+        mTouchSlop = configuration.scaledTouchSlop
+        mMinimumVelocity = configuration.scaledMinimumFlingVelocity
+        mMaximumVelocity = configuration.scaledMaximumFlingVelocity
+    }
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -83,50 +93,45 @@ class FlowLayout @JvmOverloads constructor(context: Context?, attrs: AttributeSe
     private var startScrollPoint = Point()
     private val scroller = OverScroller(context)
     private var velocityTracker: VelocityTracker? = null
+    private fun initVelocityTrackerIfNotExists() {
+        if (velocityTracker == null) {
+            velocityTracker = VelocityTracker.obtain()
+        }
+    }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (contentHeight <= measuredHeight) {
             return super.onTouchEvent(event)
         }
-
+        initVelocityTrackerIfNotExists()
         velocityTracker?.addMovement(event)
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
                 downPoint.set(event.x, event.y)
-                isScroll = false
-                scroller.abortAnimation()
-                velocityTracker = VelocityTracker.obtain()
-
-                velocityTracker?.addMovement(event)
-            }
-            MotionEvent.ACTION_MOVE -> {
-                if (!isScroll) {
-                    if (abs(event.y - downPoint.y) > abs(event.x - downPoint.x)) {
-                        isScroll = true
-                        //update down point to avoid fling
-                        downPoint.set(event.x, event.y)
-                        startScrollPoint.set(scrollX, scrollY)
-                    }
-                } else {
-//                    scrollTo(0, (downPoint.y - event.y).toInt() + startScrollPoint.y)
-                    // replace scroll to with scroller
-//                    scroller.startScroll(0, 0, 0, ((downPoint.y - event.y).toInt()))
-                    scroller.startScroll(0, scroller.finalY, 0, ((downPoint.y - event.y).toInt()))
-                    invalidate()
-                    downPoint.set(event.x, event.y)
+                if (!scroller.isFinished) {
+                    scroller.abortAnimation()
                 }
             }
+            MotionEvent.ACTION_MOVE -> {
+//                    scrollTo(0, (downPoint.y - event.y).toInt() + startScrollPoint.y)
+                // replace scroll to with scroller
+//                    scroller.startScroll(0, 0, 0, ((downPoint.y - event.y).toInt()))
+                scroller.startScroll(0, scroller.finalY, 0, ((downPoint.y - event.y).toInt()))
+                invalidate()
+                downPoint.set(event.x, event.y)
+            }
             MotionEvent.ACTION_UP -> {
-                velocityTracker?.computeCurrentVelocity(1000, ViewConfiguration.getMaximumFlingVelocity().toFloat())
+                velocityTracker?.computeCurrentVelocity(1000, mMaximumVelocity.toFloat())
                 val yVelocity = velocityTracker?.yVelocity
                 if (yVelocity != null) {
-                    if (abs(yVelocity) > ViewConfiguration.getMinimumFlingVelocity()) {
+                    if (abs(yVelocity) > mMinimumVelocity) {
                         scroller.fling(
-                                scrollX, scrollY, 0, -(yVelocity).toInt(), 0, 0, 0, max(0, bottom - height), 0, measuredHeight / 2
+                                scrollX, scrollY, 0, -(yVelocity).toInt(), 0, 0, 0, max(0, contentHeight - measuredHeight), 0, measuredHeight / 2
                         )
-                    }/* else if (scroller.springBack(scrollX, scrollY, 0, 0, 0, contentHeight - measuredHeight)) {
                         postInvalidateOnAnimation()
-                    }*/
+                    } else if (scroller.springBack(scrollX, scrollY, 0, 0, 0, contentHeight - measuredHeight)) {
+                        postInvalidateOnAnimation()
+                    }
                 }
             }
             else -> {
@@ -135,6 +140,27 @@ class FlowLayout @JvmOverloads constructor(context: Context?, attrs: AttributeSe
 
 
         return true
+    }
+
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        var isIntercept = false
+        when (ev?.action) {
+            MotionEvent.ACTION_DOWN -> {
+                downPoint.set(ev.x, ev.y)
+            }
+            MotionEvent.ACTION_MOVE -> {
+                val dy = ev.y - downPoint.y
+                if (abs(dy) > abs(ev.x - downPoint.x) && abs(dy) > touchSlop) {
+                    isIntercept = true
+                }
+            }
+            MotionEvent.ACTION_UP -> {
+
+            }
+            else -> {
+            }
+        }
+        return isIntercept
     }
 
     val point = Point()
