@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <com.xiangxue.e_conflictfixcases.x5webview.FixedX5Webview xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:hardwareAccelerated="false"
+        android:layout_height="match_parent">
+    </com.xiangxue.e_conflictfixcases.x5webview.FixedX5Webview>
+</layout>

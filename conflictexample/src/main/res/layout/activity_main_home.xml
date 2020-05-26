@@ -1,0 +1,147 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/conflict"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:onClick="onButtonClick"
+                android:text="冲突实例" />
+
+            <Button
+                android:id="@+id/viewpager"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:onClick="onButtonClick"
+                android:text="开发现状" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/event_dispatch"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:onClick="onButtonClick"
+            android:text="@string/touch_event_demo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <Button
+                android:id="@+id/case1"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:onClick="onButtonClick"
+                android:text="滚动原理" />
+
+            <Button
+                android:id="@+id/case2"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:onClick="onButtonClick"
+                android:text="平滑滚动" />
+
+            <Button
+                android:id="@+id/case3"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:onClick="onButtonClick"
+                android:text="回弹滚动" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/outer_intercept"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:onClick="onButtonClick"
+                android:text="外部拦截" />
+
+            <Button
+                android:id="@+id/inner_intercept"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:onClick="onButtonClick"
+                android:text="内部拦截" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/lift"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:onClick="onButtonClick"
+                android:text="抬手" />
+
+            <Button
+                android:id="@+id/nonlift"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:onClick="onButtonClick"
+                android:text="不抬手" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/nested_scroll"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:onClick="onButtonClick"
+                android:text="@string/nested_scroll" />
+
+            <Button
+                android:id="@+id/webview_conflict"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:onClick="onButtonClick"
+                android:text="Webview冲突" />
+
+            <Button
+                android:id="@+id/x5webview_conflict"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:onClick="onButtonClick"
+                android:padding="0dp"
+                android:text="X5Webview冲突" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

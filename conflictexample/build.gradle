@@ -1,0 +1,59 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+    defaultConfig {
+        applicationId "com.donfyy.conflict"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+    signingConfigs {
+        release {
+            storeFile file("./keystore.jks")
+            storePassword 'xiangxue'
+            keyAlias 'xiangxue'
+            keyPassword 'xiangxue'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    dataBinding {
+        enabled true
+    }
+}
+
+dependencies {
+    testImplementation rootProject.ext.dependencies.coreKtx
+    testImplementation rootProject.ext.dependencies.kotlinStdlibJdk7
+    testImplementation rootProject.ext.dependencies.junit
+    androidTestImplementation rootProject.ext.dependencies.testRunner
+    androidTestImplementation rootProject.ext.dependencies.espressoCore
+    implementation rootProject.ext.dependencies.appcompat
+    implementation rootProject.ext.dependencies.lifecycleExtensions
+    implementation rootProject.ext.dependencies.constraintlayout
+    implementation rootProject.ext.dependencies.material
+    implementation rootProject.ext.dependencies.viewpager2
+    implementation files('libs/nineoldandroids.jar')
+    implementation 'com.tencent.tbs.tbssdk:sdk:43697'
+    compile('com.alibaba.android:vlayout:1.2.12@aar') {
+        transitive = true
+    }
+}
+repositories {
+    mavenCentral()
+}
