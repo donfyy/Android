@@ -13,7 +13,8 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="你好"
+            android:text="Vector Drawable"
+            android:onClick="onShowVectorDrawableExample"
             android:textColor="#000" />
 
         <Button
