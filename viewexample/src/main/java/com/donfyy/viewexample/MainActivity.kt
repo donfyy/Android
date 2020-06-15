@@ -13,6 +13,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onShowVectorDrawableExample(view: View) {
-        startActivity(Intent(this, VectorDrawableActivity::class.java))
+        showActivity(VectorDrawableActivity::class.java)
+    }
+
+    private fun showActivity(clazz: Class<out AppCompatActivity>) {
+        startActivity(Intent(this, clazz))
+    }
+
+    fun onShowLottieExample(view: View) {
+        showActivity(LottieActivity::class.java)
     }
 }

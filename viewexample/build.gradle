@@ -33,6 +33,10 @@ dependencies {
     androidTestImplementation rootProject.ext.dependencies.testRunner
     androidTestImplementation rootProject.ext.dependencies.espressoCore
     implementation rootProject.ext.dependencies.appcompat
+    implementation rootProject.ext.dependencies.navigation_ui
+    implementation rootProject.ext.dependencies.navigation_fragment
+    implementation rootProject.ext.dependencies.material
     implementation rootProject.ext.dependencies.lifecycleExtensions
     implementation rootProject.ext.dependencies.constraintlayout
+    implementation rootProject.ext.dependencies.lottie
 }

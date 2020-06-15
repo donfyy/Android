@@ -55,6 +55,7 @@ ext {
             viewPagerTransforms:'com.ToxicBakery.viewpager.transforms:view-pager-transforms:2.0.24',
             kotlinStdlibJdk7:"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
             viewpager2:"androidx.viewpager2:viewpager2:1.0.0",
-            coreKtx :'androidx.core:core-ktx:1.2.0'
+            coreKtx :'androidx.core:core-ktx:1.2.0',
+            lottie :'com.airbnb.android:lottie:3.4.0'
     ]
 }
