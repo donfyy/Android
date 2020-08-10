@@ -1,3 +1,4 @@
+include ':SerializableDemo'
 include ':conflictexample'
 include ':eventdispatchexample'
 include ':constraintlayoutexample'
