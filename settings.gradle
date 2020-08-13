@@ -1,3 +1,4 @@
+include ':base'
 include ':rxjavasamples'
 include ':SerializableDemo'
 include ':conflictexample'

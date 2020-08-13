@@ -8,9 +8,10 @@ android {
         applicationId "com.donfyy.androidcrowds"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+
+        testInstrumentationRunner rootProject.ext.testInstrumentationRunner
     }
     buildTypes {
         release {
@@ -22,9 +23,8 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
-
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding true
     }
 }
 

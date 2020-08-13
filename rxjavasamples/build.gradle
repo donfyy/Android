@@ -22,20 +22,28 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+    buildFeatures {
+        dataBinding true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    testImplementation rootProject.ext.dependencies.coreKtx
-    testImplementation rootProject.ext.dependencies.kotlinStdlibJdk7
-    testImplementation rootProject.ext.dependencies.junit
-    androidTestImplementation rootProject.ext.dependencies.testRunner
-    androidTestImplementation rootProject.ext.dependencies.espressoCore
+    implementation rootProject.ext.dependencies.coreKtx
+    implementation rootProject.ext.dependencies.kotlinStdlibJdk7
     implementation rootProject.ext.dependencies.appcompat
-    implementation rootProject.ext.dependencies.navigation_ui
-    implementation rootProject.ext.dependencies.navigation_fragment
+    implementation rootProject.ext.dependencies.navigationUIKtx
+    implementation rootProject.ext.dependencies.navigationFragmentKtx
     implementation rootProject.ext.dependencies.material
     implementation rootProject.ext.dependencies.lifecycleExtensions
     implementation rootProject.ext.dependencies.constraintlayout
     implementation rootProject.ext.dependencies.rxJava
+    implementation rootProject.ext.dependencies.rxAndroid
+    testImplementation rootProject.ext.dependencies.junit
+    androidTestImplementation rootProject.ext.dependencies.testRunner
+    androidTestImplementation rootProject.ext.dependencies.espressoCore
 }

@@ -12,8 +12,4 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
-
-    fun hi(view: View) {
-        Flowable.just("Hi~").subscribe { Snackbar.make(window.decorView, it, Snackbar.LENGTH_LONG).show() }
-    }
 }
