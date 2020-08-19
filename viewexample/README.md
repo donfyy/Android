@@ -66,3 +66,79 @@ View在Activity中显示出来要经过测量、布局、绘制三个步骤，�
 
 ### View的视图结构
 
+1. PhoneWindow是Android系统的窗口实现类，继承自Window，负责管理界面显示及事件响应。
+是Activity与View系统交互的接口。
+2. DecorView是View树的根节点，组成了PhoneWindow，继承自FrameLayout
+3. ViewRoot在Activity启动时创建，负责管理布局渲染窗口UI等等。
+
+### Android坐标系
+
+- 屏幕的左上角为坐标原点
+- x轴从左到右增大
+- y轴从上到下增大
+
+### View的位置描述
+
+**top, right, bottom, left以父控件为坐标轴的位置信息**
+
+- top: 子View上边界到父View上边界的距离
+- left: 子View左边界到父View左边界的距离
+- bottom: 子View下边界到父View上边界的距离
+- right: 子View右边界到父View左边界的距离
+
+对应的API如下：
+```java
+    public final int getTop() {
+        return mTop;
+    }
+    public final int getLeft() {
+        return mLeft;
+    }
+    public final int getBottom() {
+        return mBottom;
+    }
+    public final int getRight() {
+        return mRight;
+    }
+```
+
+### MotionEvent提供的方法
+
+- getX(): 获取触摸点距**控件**左边界的距离
+- getY(): 获取触摸点距**控件**上边界的距离
+- getRawX(): 获取触摸点距**屏幕**左边界的距离
+- getRawY(): 获取触摸点距**屏幕**上边界的距离
+
+### 颜色
+
+- ARGB8888：四通道高精度（32位）
+- ARGB4444：四通道低精度（16位）
+- RGB565：Android屏幕默认模式（16位）
+- Alpha8：仅有透明通道（8位）
+
+字母表示通道类型，数值表示通道类型用多少位二进制来描述。
+例如ARGB8888，表示有四个通道ARGB，每个通道用8位来描述。
+颜色值由小到大，值由浅到深
+
+## View树的绘制流程
+
+View树的绘制由ViewRoot负责，ViewRoot是View树的管理者，负责将DecorView和PhoneWindow组合起来，
+DecorView与ViewRoot是一一对应的，WindowManager负责其对应关系。
+
+### View树的添加
+
+1. WindowManagerGlobal.addView
+2. ViewRootImpl.setView
+3. ViewRootImpl.requestLayout 
+4. ViewRootImpl.scheduleTraversals 
+5. TraversalRunnable.run
+6. ViewRootImpl.doTraversal 
+7. ViewRootImpl.performTraversals
+
+### View树的绘制流程（ViewRootImpl.performTraversals）
+
+1. 如果需要重新测量，则重新测量（measure），否则跳到2
+2. 如果需要重新布局，则重新布局（layout），否则跳到3
+3. 如果需要重新绘制，则重新绘制（draw），否则跳到4
+
+### measure
