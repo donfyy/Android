@@ -43,7 +43,8 @@ View在Activity中显示出来要经过测量、布局、绘制三个步骤，�
         this(context, attrs, defStyleAttr, 0);
     }
 
-    // 子类可以在第二个构造函数里调用此构造函数，为自己设置默认的主题样式，例如R.attr.buttonStyle。以及默认的样式，例如R.style.buttonStyle
+    // 子类可以在第二个构造函数里调用此构造函数，为自己设置默认的主题样式，
+    // 例如R.attr.buttonStyle。以及默认的样式，例如R.style.buttonStyle
     // 属性值按优先级依次从以下地方获取
     // 1.AttributeSet 中的属性
     // 2.AttributeSet 中的样式中
