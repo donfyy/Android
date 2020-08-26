@@ -135,3 +135,9 @@ mips-malta-linux-gnu-gcc
 - [Android ABI](https://developer.android.com/ndk/guides/abis?hl=zh-cn)
 - [CMAKE手册](https://www.zybuluo.com/khan-lau/note/254724)
 - [Makefile 语法详解](https://quanzhuo.github.io/2016/06/06/Makefile/)
+
+### TODOS
+
+- 编译 hello world
+- 交叉编译 hello world
+- 熟悉CMAKE与Makefile
