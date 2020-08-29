@@ -137,6 +137,8 @@ mips-malta-linux-gnu-gcc
 - [Makefile 语法详解](https://quanzhuo.github.io/2016/06/06/Makefile/)
 - [The LLVM Compiler Infrastructure](http://llvm.org/)
 - [C++](https://isocpp.org/)
+- [The GNU C Reference Manual](https://www.gnu.org/software/gnu-c-manual/gnu-c-manual.html)
+- [The C Programming Language](https://en.wikipedia.org/wiki/The_C_Programming_Language)
 
 ### TODOS
 
