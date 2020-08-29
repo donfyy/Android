@@ -1,12 +1,12 @@
 # GCC编译C/C++的四个过程
-### 预处理
+### 预处理(导入头文件，替换宏定义)
 `gcc -E main.c -o main.i`
-### 编译阶段
+### 编译阶段(翻译至汇编语言)
 `gcc -S main.i -o main.s`
-### 汇编阶段
+### 汇编阶段(翻译至二进制指令)
 `gcc -c main.s -o main.o`
-### 链接阶段
-`gcc main.o -o main.exe`
+### 链接阶段(填充可执行文件内部声明但是没有定义的函数地址)
+`gcc main.o -o main`
 
 
 # GCC 使用
