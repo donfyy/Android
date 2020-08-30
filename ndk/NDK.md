@@ -139,6 +139,7 @@ mips-malta-linux-gnu-gcc
 - [C++](https://isocpp.org/)
 - [The GNU C Reference Manual](https://www.gnu.org/software/gnu-c-manual/gnu-c-manual.html)
 - [The C Programming Language](https://en.wikipedia.org/wiki/The_C_Programming_Language)
+- [C 语言教程| 菜鸟教程](https://www.runoob.com/cprogramming/c-tutorial.html)
 
 ### TODOS
 
