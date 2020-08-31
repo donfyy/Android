@@ -204,7 +204,7 @@ found:
 ## 例9:函数指针
 
 ```c
-		void (*p)(int); //flutter
+    void (*p)(int); //flutter
     // void * p(int)  //  p(int)代表一个函数，void* 代表是函数的返回值
 
     p = test2;
