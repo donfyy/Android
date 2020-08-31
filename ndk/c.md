@@ -1,4 +1,21 @@
-## 例1
+## 例1：复杂声明
+
+```c
+		int *f();             // f是一个函数，他返回到int的指针
+    int(*pf);             // pf是一个到函数的指针，该函数返回一个int类型的对象
+    char **argv;          // argv: pointer to pointer to char
+    int(*pdaytab)[13];    // pdaytab: pointer to array[13] of int
+    int *daytab[13];      // daytab: array[13] of pointer to int
+    void *comp();         // comp: function returning pointer to void
+    void (*pcomp)();      // pointer to function returning void
+    char (*(*x())[])();   // x: function returning pointer to array[] of pointer to function returning char
+    char(*(*x1[3])())[5]; // x1: array[3] of pointer to function returning pointer to array[5] of char
+```
+
+
+
+## 例2：sizeof运算符
+
 ```c
     printf("===========\n");
     printf("%lu\n", sizeof(char));        // 1
@@ -23,7 +40,7 @@
 
 ```
 
-## 例2
+## 例3：用goto跳出嵌套循环
 
 ```c
 // 定义常量
@@ -55,7 +72,7 @@ found:
 
 
 
-## 例3
+## 例4：内存管理
 
 ```c
     int *ptr_i = malloc(sizeof(int)); //使用malloc函数在堆上分配了一块内存给ptr_i
@@ -74,7 +91,7 @@ found:
 
 
 
-## 例4
+## 例5：指针与数组
 
 ```c
     int array[5] = {0};
@@ -101,7 +118,7 @@ found:
     // 即&array+1：在数组的首地址的基础上，偏移一个sizeof(array)单位。此处的类型T就是数组中的一个含有5个int型元素的数组
 ```
 
-## 例5
+## 例6：以指针访问数组
 
 ```c 
     int array[] = {1, 2, 3, 4, 5};
@@ -120,6 +137,85 @@ found:
     {
         printf("p = %p, *p = %d\n", p, *p);
     }
+```
+
+## 例7：二维数组遍历
+
+```c
+
+    int(*ptr_a)[3] = arr;
+    // int **ptr_a = arr; ?
+    // printf("*(ptr_a[%d] + %d) = %d\n", 1, 1, **ptr_a); ?
+    // 遍历数组
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            // 指针偏移 *( *(ptr_a + i) + j)
+            printf("*(*(ptr_a + %d) + %d) = %d\n", i, j, *(*(ptr_a + i) + j));
+            // 下标 和指针偏移
+            printf("*(ptr_a[%d] + %d) = %d\n", i, j, *(ptr_a[i] + j));
+            // 下标 a[i][j] 或者 ptr_a[i][j]
+            printf("ptr_a[%d][%d] = %d\n", i, j, ptr_a[i][j]);
+        }
+    }
+```
+
+## 例8:指针与二维数组
+
+```c
+    int array[5] = {300}; // int * ptr_a
+    for (int i = 0; i < 5; i++)
+    {
+        printf("array[%d] = %d\n", i, array[i]);
+    }
+
+    const int m = 4, n = 3;
+    int arr[][3] = {
+        {1, 2, 3}, //首地址
+        {4, 5, 6},
+        {7, 8, 9},
+        {10, 11, 12},
+    };
+    printf("         sizeof arr %d\n", sizeof(arr));  // 48
+    printf("        sizeof &arr %d\n", sizeof(&arr)); // 8
+    printf("     address of arr %p\n", arr);          // 0x7ffeefbffd40
+    printf("    address of &arr %p\n", &arr);         // 0x7ffeefbffd40
+    printf("address of &arr + 1 %p\n", &arr + 1);     // 0x7ffeefbffd70
+
+    int(*ptr_a)[3] = arr;
+    // int **ptr_a = arr; ?
+    // printf("*(ptr_a[%d] + %d) = %d\n", 1, 1, **ptr_a); ?
+    // 遍历数组
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            // 指针偏移 *( *(ptr_a + i) + j)
+            printf("*(*(ptr_a + %d) + %d) = %d\n", i, j, *(*(ptr_a + i) + j));
+            // 下标 和指针偏移
+            printf("*(ptr_a[%d] + %d) = %d\n", i, j, *(ptr_a[i] + j));
+            // 下标 a[i][j] 或者 ptr_a[i][j]
+            printf("ptr_a[%d][%d] = %d\n", i, j, ptr_a[i][j]);
+        }
+    }
+```
+
+## 例9:函数指针
+
+```c
+		void (*p)(int); //flutter
+    // void * p(int)  //  p(int)代表一个函数，void* 代表是函数的返回值
+
+    p = test2;
+    // 函数名的值与对函数名取址的值相同
+    printf(" test2 = %p\n", test2);  // 0x1000006d0
+    printf("&test2 = %p\n", &test2); // 0x1000006d0
+    test2(100);
+    p(100);
+
+    printf("plus of 1, 2 is %d\n", apply(1, 2, plus));
+    printf("minus of 1, 2 is  %d\n", apply(1, 2, minus));
 ```
 
 
