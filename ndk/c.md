@@ -220,6 +220,117 @@ found:
     printf("minus of 1, 2 is  %d\n", apply(1, 2, minus));
 ```
 
+## 例8 strlen
+
+```c
+int mystrlen(const char *str)
+{
+    const char *p = str;
+    while (*p) p++;
+    return p - str;
+}
+
+int mystrlen(const char *str)
+{
+    const char *p = str;
+    while (*p++);// *p; p++
+    return p - str - 1;
+}
+
+```
+
+## 例9 file operation
+
+```c
+#define ROW_SIZE 10
+#define BUF_SIZE 100
+
+void test01()
+{
+    FILE *p = fopen("./test1/a.txt", "r");
+    if (p)
+    {
+        printf("==============================\n");
+        char *memo = calloc(0, sizeof(char));
+        char *tmp = memo; //当前的位置
+        int rowCount = 0;
+        char buf[BUF_SIZE];
+        while (feof(p) == 0)
+        {
+            memset(buf, 0, sizeof(char) * BUF_SIZE);
+            fgets(buf, sizeof(buf), p);
+            int a = 0;
+            char b = 0;
+            int c = 0;
+            int fillCount = sscanf(buf, "%d%c%d=", &a, &b, &c);
+            printf("fillCount = %d\n", fillCount);
+            if (fillCount != 3)
+                continue;
+            printf("rowIdx = %d, s = %s", rowCount, buf);
+            memo = realloc(memo, ROW_SIZE * (++rowCount) * sizeof(char));
+            sprintf(tmp, "%d%c%d=%d\n", a, b, c, calc(a, b, c));
+            tmp += ROW_SIZE;
+        }
+        fclose(p);
+        printf("rowCount = %d\n", rowCount);
+        printf("==============================\n");
+        p = fopen("./test1/a.txt", "w");
+        int i;
+        tmp = memo;
+        for (i = 0; i < rowCount; i++)
+        {
+            printf("%s", tmp);
+            fputs(tmp, p); // 从tmp中读取字符并写入到p中直至读到NULL
+            tmp += ROW_SIZE;
+        }
+        free(memo);
+        memo = NULL;
+        tmp = NULL;
+        fclose(p);
+        p = NULL;
+    }
+}
+
+```
+
+## 例10 二进制文件拷贝
+
+```c
+
+#define BLOCK_SIZE 1024 * 64 // 64K
+void test03(int argc, char **argv)
+{
+    if (argc < 3)
+        return;
+    FILE *pr = fopen(argv[1], "rb");
+    if (pr == NULL)
+        return;
+    FILE *pw = fopen(argv[2], "wb");
+    if (pw == NULL)
+        return;
+    struct stat st = {0};
+    stat(argv[1], &st);
+    const int buf_size = st.st_size > BLOCK_SIZE ? BLOCK_SIZE : st.st_size;
+    printf("buf_size = %d\n", buf_size);
+    char *buf = calloc(1, buf_size);
+    int iterateCount = 0;
+    while (!feof(pr))
+    {
+        int res = fread(buf, 1, buf_size, pr);
+        fwrite(buf, 1, res, pw);
+        iterateCount++;
+    }
+    printf("iterateCount=%d\n", iterateCount);
+    free(buf);
+    fclose(pw);
+    fclose(pr);
+    buf = NULL;
+    pr = NULL;
+    pw = NULL;
+}
+
+```
+
 
 
 # GCC编译C/C++的四个过程

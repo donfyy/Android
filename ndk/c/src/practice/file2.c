@@ -1,15 +1,16 @@
 #include <stdio.h>
 
-int main1() {
-    //TODO:
-    printf("\n");
-
+int main1()
+{
     FILE *pr = fopen("./test/a.txt", "r");
-    if (pr == NULL) return 0;
+    if (pr == NULL)
+        return 0;
     FILE *pw = fopen("./test/b.txt", "w");
-    if (pw) {
+    if (pw)
+    {
 
-        while (1) {
+        while (1)
+        {
             char c = fgetc(pr);
             if (c == EOF)
                 break;
@@ -25,16 +26,17 @@ int main1() {
     return 0;
 }
 
-int main2() {
-    //TODO:
-    printf("\n");
-
+int main2()
+{
     FILE *pr = fopen("./test/b.txt", "r");
-    if (pr == NULL) return 0;
+    if (pr == NULL)
+        return 0;
     FILE *pw = fopen("./test/c.txt", "w");
-    if (pw) {
+    if (pw)
+    {
 
-        while (1) {
+        while (1)
+        {
             char c = fgetc(pr);
             if (c == EOF)
                 break;
@@ -50,23 +52,27 @@ int main2() {
     return 0;
 }
 
-int main(int argc, char **argv) {
-    //TODO: 加密解码，第三个 0代表加密，1代表解码
+int main(int argc, char **argv)
+{
     printf("加密解码，第三个 0代表加密，1代表解码\n");
-    if (argc < 4) return 0;
+    if (argc < 4)
+        return 0;
     FILE *pr = fopen(argv[1], "r");
-    if (pr == NULL) return 0;
+    if (pr == NULL)
+        return 0;
     FILE *pw = fopen(argv[2], "w");
-    if (pw) {
+    if (pw)
+    {
         char key = argv[3][0];
         printf("key = %c\n", key);
         char c = fgetc(pr);
-        while(c != EOF){
-            if(key == '0')
+        while (c != EOF)
+        {
+            if (key == '0')
                 c++;
             else
                 c--;
-            putc(c,pw);
+            putc(c, pw);
             c = fgetc(pr);
         }
 
@@ -75,7 +81,5 @@ int main(int argc, char **argv) {
     }
 
     fclose(pr);
-
-
     return 0;
 }

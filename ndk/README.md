@@ -141,6 +141,7 @@ mips-malta-linux-gnu-gcc
 - [The C Programming Language](https://en.wikipedia.org/wiki/The_C_Programming_Language)
 - [C 语言教程| 菜鸟教程](https://www.runoob.com/cprogramming/c-tutorial.html)
 - [printf](http://www.cplusplus.com/reference/cstdio/printf/)
+- [cpp reference](https://en.cppreference.com/w/)
 
 ### TODOS
 

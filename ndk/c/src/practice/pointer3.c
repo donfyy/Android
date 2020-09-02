@@ -8,10 +8,10 @@ void test03();
 void test04();
 int main()
 {
-    // test01();
+    test01();
     // test02();
     // test03();
-    test04();
+    // test04();
 }
 
 void test2(int n)
