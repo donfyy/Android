@@ -1,5 +1,23 @@
+#include <stdio.h>
+
+extern int externA; // 使用extern声明在其他源文件中定义的外部变量，该源文件单独编译
+extern int externC;
+
 int main()
 {
+    /**
+     * externA  = 1
+     * externC  = 0
+     * staticA  = 0
+     * autoA  = -272630528
+     */
+    static int staticA;
+    int autoA;
+    printf("externA  = %d\n", externA);
+    printf("externC  = %d\n", externC);
+    printf("staticA  = %d\n", staticA);
+    printf("autoA  = %d\n", autoA);
+
     int *f();             // f是一个函数，他返回到int的指针
     int(*pf);             // pf是一个到函数的指针，该函数返回一个int类型的对象
     char **argv;          // argv: pointer to pointer to char

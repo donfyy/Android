@@ -166,7 +166,10 @@ found:
 ## 例8:指针与二维数组
 
 ```c
-    int array[5] = {300}; // int * ptr_a
+
+    // 如果初始化表达式的个数比数组元素数少，
+    // 则对外部变量，静态变量和自动变量来说，没有初始化表达式的元素被初始化为0
+    int array[5] = {0}; // int * ptr_a
     for (int i = 0; i < 5; i++)
     {
         printf("array[%d] = %d\n", i, array[i]);
