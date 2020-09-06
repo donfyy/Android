@@ -1,0 +1,9 @@
+
+1.在windows中建立一个Shared目录
+2.VirtualBox 设备 -> 共享文件夹 -> 选择windows中的Shared目录
+3.在Ubuntu中的/mnt/建立一个Shared目录
+
+执行以下命令
+
+
+sudo mount -t vboxsf Shared /mnt/Shared

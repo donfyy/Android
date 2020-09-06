@@ -1,0 +1,37 @@
+Step1：安装samba服务
+
+$ sudo apt-get install samba
+
+Step2:  在/etc/samba/smb.conf增加配置
+
+Step3 ： 重启samba服务 
+
+/etc/init.d/samba restart
+
+【
+
+启动Samba服务器只需执行如下命令：
+
+#sudo /etc/init.d/samba start
+
+关闭Samba服务器：
+
+#sudo /etc/init.d/samba stop
+
+重新启动Samba服务器：
+
+#sudo /etc/init.d/samba restart
+
+】
+
+Step4: ubuntu开启共享目录权限：
+
+chmod 777 /home/YOUR_USER_NAME
+
+备注：其中YOUR_USER_NAME可以是任意创建的目录，只需与Step2中对应即可。
+
+Step5： 在windows中访问共享文件夹
+
+\\192.168.56.116\share
+
+备注：经常访问此目录的话，可以设置快捷方式或者添加网络位置。
