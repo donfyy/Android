@@ -184,12 +184,38 @@ void example06()
     int array3[c + d1];
 }
 
+void example07() {
+    printf("%lu\n", sizeof(char));        // 1
+    printf("%lu\n", sizeof(char&));       // 1
+    printf("%lu\n", sizeof(short));       // 2
+    printf("%lu\n", sizeof(int));         // 4
+    printf("%lu\n", sizeof(long));        // 8
+    printf("%lu\n", sizeof(long long));   // 8
+    printf("%lu\n", sizeof(float));       // 4
+    printf("%lu\n", sizeof(double));      // 8
+    printf("%lu\n", sizeof(long double)); // 16
+}
+
+// :: 作用域限定运算符
+int a;
+void scopeResolution()
+{
+    cout << "作用域解析" << endl;
+    float a = 3.14;
+    ::a = 5; //实现在局部变量a的作用域范围内对全局变量a的访问
+    cout << "local a: " << a << " global a: " << ::a << endl;
+}
+
+
 int main(int argc, char const *argv[])
 {
     // example01();
     // example02();
     // example03();
     // example04();
-    example05();
+    // example05();
+    // example06();
+    // example07();
+    scopeResolution();
     return 0;
 }

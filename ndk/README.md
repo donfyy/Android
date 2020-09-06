@@ -145,6 +145,7 @@ mips-malta-linux-gnu-gcc
 
 ### TODOS
 
-- 编译 hello world
-- 交叉编译 hello world
-- 熟悉CMAKE与Makefile
+- [ ] 编译 hello world
+- [ ] 交叉编译 hello world
+- [ ] 熟悉CMAKE与Makefile
+- [ ] 内存对齐

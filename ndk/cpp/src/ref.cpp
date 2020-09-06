@@ -71,37 +71,37 @@ void example02()
     printf("num1:%d, num2:%d \n", num1, num2);
 }
 
-void printT1(const Teacher *pT)
+void printT1(Teacher *pT)
 {
-    cout << pT->age << endl;
+    pT->age++;
 }
 
 void printT2(Teacher &pT)
 {
-    cout << pT.age << endl;
     //pT是一个别名
-    pT.age = 33;
+    pT.age++;
 }
 
-void printT3(Teacher pT)
-{ //值传递
-    cout << pT.age << endl;
-    //pT是一个别名
-    pT.age = 36;
-}
-
-int main13()
+void printT3(Teacher pT) //值传递
 {
-    //TODO: 复杂类型引用的使用
+    //pT是一个副本
+    pT.age++;
+}
+
+void example03()
+{
     cout << "复杂类型引用的使用" << endl;
     Teacher t1;
     t1.age = 35;
+    cout << "age before printT1: " << t1.age << endl;
     printT1(&t1);
+    cout << "age after printT1: " << t1.age << endl;
+    cout << "age before printT2: " << t1.age << endl;
     printT2(t1); //pT 是t1的别名
+    cout << "age after printT2: " << t1.age << endl;
+    cout << "age before printT3: " << t1.age << endl;
     printT3(t1); //pT是形参， t1 copy一份数据给pT //pT = t1;
-    printf("t1.age:%d\n", t1.age);
-
-    return 0;
+    cout << "age after printT3: " << t1.age << endl;
 }
 
 void modifyA(int &a)
@@ -111,16 +111,16 @@ void modifyA(int &a)
 }
 
 void modifyA1(int *const a)
-{ //指针常量
+{
     *a = 12;
 }
 
-struct Teacher1
+struct Teacher1 // 88
 {
-    char name[64];
-    int age; // 8
-    int &a;  //8
-    int &b;  //8
+    char name[64]; // 64
+    int age;       // 4
+    int &a;        // 4
+    int &b;        // 4
 };
 
 void modifyA3(int *p)
@@ -128,10 +128,8 @@ void modifyA3(int *p)
     *p = 200;
 }
 
-void example07()
+void example04()
 {
-    cout << "引用的本质思考？" << endl;
-
     int a = 10;
     int &b = a; // b像一个常量
     modifyA(a); //函数调用的时候，我们程序员不需要取a的地址
@@ -143,12 +141,17 @@ void example07()
     modifyA1(&a); //指针，我们需手动取地址
     //引用在C++的内部实现 就是一个常量指针
 
-    printf("sizeof(Teacher1): %d \n", sizeof(Teacher1));
+    printf("sizeof(Teacher1): %lu \n", sizeof(Teacher1));
+    printf("sizeof(int&): %lu \n", sizeof(int &));
+    printf("sizeof(int): %lu \n", sizeof(int));
+    printf("sizeof(char[64]): %lu \n", sizeof(char[64]));
 }
 
 int main()
 {
     // example01();
-    example02();
+    // example02();
+    // example03();
+    example04();
     return 0;
 }
