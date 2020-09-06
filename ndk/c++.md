@@ -97,9 +97,9 @@ void f1() {
 可以通过引用来描述一个函数参数，以使该函数能够改变传递来的变量的值。
 
 ```c++
-	void increment(int &aa) { aa++; }
+    void increment(int &aa) { aa++; }
 
-	void f() {
+    void f() {
       	int x = 1;
       	increment(x);	// x = 2
     }
