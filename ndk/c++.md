@@ -132,3 +132,128 @@ void f1() {
     printf("c:%d\n", c); // 30
 ```
 
+
+
+## 类
+
+### 对象声明、初始化、赋值
+
+```c++
+    // Test2 t = (1, 2, 3);
+    // Test2 t = 9;
+    // Test2 t(1);
+    // Test2 t{1};
+    // Test2 t = {1};
+    // Test2 t = Test2(1);
+    Test2 t1(1);
+    Test2 t2(2);
+    t1.print();    // 1
+    t1 = t2;       // 对象之间赋值，没有新建对象，这里与Java不同
+    t1.print();    // 2
+    Test2 t3 = t1; // 调用拷贝构造函数 对象初始化
+    Test2 t4(t1);  // 调用拷贝构造函数 对象初始化
+```
+
+### 作为函数参数的对象
+
+```c++
+    void takingObject(Test2 t)
+    {
+        cout << t.getA() << endl;
+    }
+    
+    Test2 t(1);
+    takingObject(t); // 调用拷贝构造函数
+
+```
+
+### 作为返回值的对象
+
+```c++
+    Test2 returnObject()
+    {
+        Test2 t(4, 5);
+        return t;
+    }
+
+    // returnObject();
+    Test2 t1 = returnObject(); //初始化 t1, 创建一个匿名对象，(扶正)从匿名转成了有名字了 t1
+    t1.print(); // 注意：这里只创建了1个对象，t1就是返回的对象。
+
+    Test2 t2(1, 2);
+    t2 = returnObject(); // 返回的对象在其值赋给t2后立即被销毁(在t2.print()之前被销毁)
+    t2.print();
+```
+
+### 浅拷贝与深拷贝
+
+拷贝构造函数与赋值运算符的默认实现是浅拷贝，所以如果某个类内部分配了堆内存，该类需要重写拷贝构造函数和赋值运算符以获得期望的行为。
+
+```c++
+    class Test3
+    {
+    public:
+        Test3();
+        Test3(const char *arg);
+        Test3(const Test3 &t);
+        ~Test3();
+        Test3 &operator=(Test3 &t);
+        void print();
+    
+    private:
+        int id = g_id++;
+        char *p;
+    };
+    Test3::Test3()
+    {
+        p = (char *)malloc(100);
+        strcpy(p, "steady!");
+        cout << "Test3(): id = " << id << endl;
+    }
+    Test3::Test3(const char *arg)
+    {
+        p = (char *)malloc(100);
+        strcpy(p, arg);
+        cout << "Test3(const char*): id = " << id << endl;
+    }
+    Test3::Test3(const Test3 &t)
+    {
+        p = (char *)malloc(100);
+        strcpy(p, t.p);
+        cout << "Test3(const Test3 &): id = " << id << endl;
+        // p = t.p; Oops! t1和t2指向了同一块堆内存，t1被析构后，该堆内存被释放，但t2仍在使用该堆内存
+    }
+    Test3::~Test3()
+    {
+        if (p != NULL)
+            free(p);
+        cout << "~Test3() :id = " << id << endl;
+    }
+    Test3 &Test3::operator=(Test3 &t)
+    {
+        strcpy(p, t.p);
+        return *this;
+    }
+    void Test3::print()
+    {
+        cout << "id: " << id << " p: " << p << endl;
+    }
+
+    // 赋值运算符以及拷贝构造函数的默认实现是浅拷贝，
+    // 如果类内部分配了堆内存，则该类需要重写析构函数，拷贝构造函数，以及赋值运算符等。
+    // 构造函数的调用顺序：t1 -> t2 -> t3
+    // 析构函数的调用顺序：t1 <- t2 <- t3
+    void example05()
+    {
+        Test3 t1("t1");
+        t1.print();
+        Test3 t2 = t1;
+        t2.print();
+        Test3 t3("t3");
+        t3.print();
+        t3 = t1;
+        t3.print();
+    }
+
+```
+

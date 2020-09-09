@@ -1,7 +1,3 @@
-//
-// Created by Zero on 2019/10/10.
-//
-
 #include <iostream>
 #include <string.h>
 #include "MyArray.h"
