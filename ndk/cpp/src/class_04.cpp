@@ -171,8 +171,6 @@ Name::Name(const Name &name)
     this->pName = (char *)malloc(size + 1);
     strcpy(this->pName, name.pName);
     cout << "Copy constructor(Name&): " << this << " name: " << this->pName << endl;
-
-
 }
 Name::~Name()
 {
@@ -197,13 +195,15 @@ Name &Name::operator=(Name &obj)
     return *this;
 }
 
-ostream &operator<<(ostream &out, Name &n) {
+ostream &operator<<(ostream &out, Name &n)
+{
     out << "Name (" << n.pName << ") : " << &n << endl;
     return out;
 }
 
-void* Name::operator new(size_t size) {
-    void * p = malloc(size);
+void *Name::operator new(size_t size)
+{
+    void *p = malloc(size);
     cout << "new (" << size << "): " << p << endl;
     return p;
 }
@@ -212,7 +212,7 @@ void example02()
 {
     // 默认copy构造函数 浅拷贝
     Name alice("Alice");
-    Name alice2 = alice; 
+    Name alice2 = alice;
     Name bob("Bob");
     alice2 = bob;
     cout << alice2;
@@ -222,9 +222,41 @@ void example02()
     delete alice3;
 }
 
+namespace test1
+{
+
+    class A
+    {
+        int a;
+        friend void ff(A&);
+    private:
+    int b;
+        /* data */
+    public:
+        A(/* args */);
+        ~A();
+    };
+
+    A ::A(/* args */)
+    {
+    }
+
+    A ::~A()
+    {
+    }
+
+    void ff(A& a) {
+        cout << "ff: A::a = " << a.a << endl;
+    }
+} // namespace test1
+void example03() {
+    test1::A a;
+    test1::ff(a);
+}
 int main(int argc, char const *argv[])
 {
     // example01();
-    example02();
+    // example02();
+    example03();
     return 0;
 }
