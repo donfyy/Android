@@ -3,7 +3,7 @@
 
 ostream &operator<<(ostream &out, MyString &s)
 {
-    out << s.m_p;
+    out << s.m_p << endl;
     return out;
 }
 
@@ -89,13 +89,14 @@ MyString &MyString::operator=(const char *p)
 
 MyString &MyString::operator=(const MyString &s)
 {
-    if (m_p != NULL)
-    {
-        delete[] m_p;
+    if (this != &s) {
+        // 考虑异常安全性，抛出异常时该实例仍处于有效的状态
+        MyString temp(s);
+        char* pTemp = temp.m_p;
+        temp.m_p = m_p;
+        m_p = pTemp;
+        m_len = temp.m_len;
     }
-    m_len = s.m_len;
-    m_p = new char[m_len + 1];
-    strcpy(m_p, s.m_p);
     return *this;
 }
 

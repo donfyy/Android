@@ -13,7 +13,9 @@ void example01()
     MyString s3 = s2;
     MyString s4 = "s4444444444";
 
+    cout << "s4: " << s4;
     s4 = s2;
+    cout << "s4: " << s4;
     s4 = "s2222";
     s4[1] = '4';
     printf("%c\n", s4[1]);
@@ -379,28 +381,28 @@ public:
     }
 };
 
-void f1() throw(int)
-{
-    cout << "f1 start" << endl;
-    int a;
-    throw 2;
-    cout << "f1 end" << endl;
-}
+// void f1() throw(int)
+// {
+//     cout << "f1 start" << endl;
+//     int a;
+//     throw 2;
+//     cout << "f1 end" << endl;
+// }
 
-void f2() throw(int)
-{
-    cout << "f2 start" << endl;
-    F f;
-    f1();
-    cout << "f2 end" << endl;
-}
+// void f2() throw(int)
+// {
+//     cout << "f2 start" << endl;
+//     F f;
+//     f1();
+//     cout << "f2 end" << endl;
+// }
 
 void f3()
 {
     cout << "f3 start" << endl;
     try
     {
-        f2();
+        // f2();
     }
     catch (int i)
     {
@@ -512,7 +514,7 @@ void example13()
 
 int main(int argc, char const *argv[])
 {
-    // example01();
+    example01();
     // example02();
     // example03();
     // example04();
@@ -524,6 +526,6 @@ int main(int argc, char const *argv[])
     // example10();
     // example11();
     // example12();
-    example13();
+    // example13();
     return 0;
 }
