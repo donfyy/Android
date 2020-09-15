@@ -32,7 +32,7 @@ task clean(type: Delete) {
 ext {
     compileSdkVersion = 29
     buildToolsVersion = "29.0.3"
-    targetSdkVersion = 29
+    targetSdkVersion = 28
     minSdkVersion = 21
     navVersion = "2.3.0"
     versionCode = 1
@@ -67,5 +67,6 @@ ext {
             leakcanary:'com.squareup.leakcanary:leakcanary-android:2.4',
             rxJava:'io.reactivex.rxjava3:rxjava:3.0.5',
             rxAndroid:'io.reactivex.rxjava3:rxandroid:3.0.0',
+            utilcodex:'com.blankj:utilcodex:1.29.0',
     ]
 }

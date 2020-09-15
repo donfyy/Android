@@ -1,3 +1,6 @@
+include ':util'
+include ':skinlib'
+include ':skin'
 include ':base'
 include ':rxjavasamples'
 include ':SerializableDemo'
