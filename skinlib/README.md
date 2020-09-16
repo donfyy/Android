@@ -162,8 +162,259 @@ class LayoutInflater {
 }
 ```
 
+#### 注册Activity的生命周期回调方法并收集需要换肤的View
+
+```kotlin
+    @JvmStatic
+    // 初始化插件化换肤框架
+    fun init(app: Application) {
+        context = app
+        // 使用SharedPreference保存当前用户使用的皮肤
+        sp = SkinPreference(app)
+        // 注册Activity的生命周期回调，实现Activity无入侵性换肤
+        app.registerActivityLifecycleCallbacks(ActivityLifecycleCallback()) // B
+        // 加载用户选择的皮肤
+        loadSkin(sp.skinPath)
+    }
+```
+
+```java
+class Activity {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        // ...
+        // Activity在这里分发create事件
+        dispatchActivityCreated(savedInstanceState);
+        // ... 
+    }
+
+    private void dispatchActivityCreated(@Nullable Bundle savedInstanceState) {
+        // 该方法将create事件分发给Application，因此在上文B处的回调会收到通知
+        // 注意，此方法是父类中的方法，会先于Activity子类的onCreate方法体的执行
+        // 因此我们可以在setContentView被调用之前设置好LayoutInflaterFactory
+        getApplication().dispatchActivityCreated(this, savedInstanceState);
+        // ...
+    }
+}
+```
+
+```kotlin
+class ActivityLifecycleCallback : Application.ActivityLifecycleCallbacks {
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+       try {
+            // 创建自定义的工厂
+            val factory = LayoutInflaterFactory()
+            // 通过反射修改mFactorySet的值，注意在29的源码中该字段不可以被反射，但是mFactory2仍然可以，
+            // 因此需要在适配29
+            if (sLayoutInflaterFactory2Field == null) {
+                sLayoutInflaterFactory2Field = LayoutInflater::class.java.getDeclaredField("mFactorySet")
+            }
+            sLayoutInflaterFactory2Field?.let {
+                it.isAccessible = true
+                it.set(activity.layoutInflater, false)
+            }
+            // 把工厂放到activity的LayoutInflater中，该方法内部的实现反射了mFactory2字段。。
+            LayoutInflaterCompat.setFactory2(activity.layoutInflater, factory)
+            // 保存工厂与activity的映射关系，以便在activity销毁时移除该工厂
+            map[activity] = factory
+            // 观察SkinManager，以便在用户点击换肤按钮时更新view
+            SkinManager.addObserver(factory)
+        } catch (e: NoSuchFieldException) {
+        }
+    }
+    override fun onActivityDestroyed(activity: Activity) {
+        // 状态清理
+        val factory = map.remove(activity)
+        SkinManager.deleteObserver(factory)
+    }
+}
+```
+
+```kotlin
+// 该工厂用来接管view的创建过程，以便在view创建后，该view需要换肤的属性。
+class LayoutInflaterFactory : LayoutInflater.Factory2 {
+    override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? {
+        return if (-1 == name.indexOf('.')) {
+            // 如果创建的是系统内置的view，则为name补齐前缀，然后调用createView
+            // createView(name, "android.view.", attrs)
+            // onCreateView(String name, AttributeSet attrs) ，
+            // 该方法被PhoneLayoutInflater子类覆盖 ，以优先使用兼容包中的View
+            createSdkView(context, parent, name, attrs)
+        } else {
+            createView(context, name, null, attrs)
+        }
+    }
+
+    private fun createSdkView(context: Context, parent: View?, name: String, attrs: AttributeSet): View? {
+        sClassPrefixList.forEach {
+            val view = createView(context, name, it, attrs)
+            if (view != null) {
+                return view
+            }
+        }
+        return null
+    }
+
+    private fun createView(viewContext: Context, name: String, prefix: String?, attr: AttributeSet): View? {
+        var constructor: Constructor<out View?>? = sConstructorMap[name]
+        var clazz: Class<out View?>? = null
+        return try {
+            if (constructor == null) {
+                // 通过反射获取View对应的Class字节码
+                clazz = Class.forName(if (prefix != null) prefix + name else name, false,
+                        viewContext.classLoader).asSubclass(View::class.java)
+                // 然后获取View的第二个构造方法 View(Context.class, AttributeSet.class)
+                constructor = clazz.getConstructor(*sConstructorSignature)
+                constructor.isAccessible = true
+                sConstructorMap[name] = constructor
+            }
+            // 通过反射调用构造方法创建View
+            constructor.newInstance(viewContext, attr).apply { 
+                // 构造出view后，开始收集该view上需要换肤的属性
+                // 注意需要换肤的属性是预定义在主app中的，不可以随意变更。
+                this?.let { skinViewManager.look(it, attr) } 
+            }
+        } catch (e: Exception) {
+        }
+    }
+}
+```
+
+```kotlin
+package com.donfyy.skinlib
+
+import android.util.AttributeSet
+import android.view.View
+import com.donfyy.skinlib.utils.ThemeUtils
+
+class SkinViewManager {
+    private val skinViews = mutableListOf<SkinView>()
+    // 查找view在xml中用到的属性值并保存到集合中，收集某个view上需要换肤的属性集合
+    fun look(view: View, attrs: AttributeSet) {
+        val map = HashMap<String, Int>()
+        for (i in 0 until attrs.attributeCount) {
+            val attrName = attrs.getAttributeName(i)
+            // skinAttrs预置了需要换肤的属性 如 "background" "src" 等
+            if (attrName !in skinAttrs) continue
+            val attrValue = attrs.getAttributeValue(i)
+            val resId = when {
+                attrValue.startsWith("@") -> attrValue.substring(1).toInt()
+                attrValue.startsWith("?") -> {
+                    // 使用属性引用的资源
+                    ThemeUtils.getResId(view.context, intArrayOf(attrValue.substring(1).toInt()))[0]
+                }
+                // 硬编码的属性值无法改变
+                else -> 0
+            }
+            if (resId != 0) {
+                map[attrName] = resId
+            }
+        }
+        if (map.isNotEmpty() || view is SkinViewSupport) {
+            // 不得不说，操作符重载加上高阶函数真是香
+            skinViews += SkinView(view, map).apply { applySkin() }
+        }
+    }
+}
+```
+
+至此，完成了在Activity上的所有需要换肤view的收集。该方案的优点在于对activity无侵入性。
+
 ### 加载插件中的皮肤资源
+
+#### 如何加载皮肤中的资源？
+
+```java
+class Context {
+    // 从getDrawable开始分析系统是如何获取到drawable的
+    public final Drawable getDrawable(@DrawableRes int id) {
+        // 该Resources实例是在ContextImpl中赋值的
+        return getResources().getDrawable(id, getTheme());
+    }       
+}
+class ContextImpl {
+    static ContextImpl createAppContext(ActivityThread mainThread, LoadedApk packageInfo,
+            String opPackageName) {
+        if (packageInfo == null) throw new IllegalArgumentException("packageInfo");
+        ContextImpl context = new ContextImpl(null, mainThread, packageInfo, null, null, null, 0,
+                null, opPackageName);
+        // setResources方法用于设置一个Resources实例，该方法在创建各种上下文中被调用
+        // 如createActivityContext,createSystemUiContext
+        // 接下来查看LoadedApk中的Resources是如何创建的
+        context.setResources(packageInfo.getResources());
+        return context;
+    }
+}
+class LoadedApk {
+    public Resources getResources() {
+        if (mResources == null) {
+            final String[] splitPaths;
+            // ...
+            mResources = ResourcesManager.getInstance().getResources(null, mResDir, // A
+                    splitPaths, mOverlayDirs, mApplicationInfo.sharedLibraryFiles,
+                    Display.DEFAULT_DISPLAY, null, getCompatibilityInfo(),
+                    getClassLoader());
+        }
+        return mResources;
+    }
+}
+class ResourcesManager {
+    public @Nullable Resources getResources(@Nullable IBinder activityToken,
+            @Nullable String resDir,
+            @Nullable String[] splitResDirs,
+            @Nullable String[] overlayDirs,
+            @Nullable String[] libDirs,
+            int displayId,
+            @Nullable Configuration overrideConfig,
+            @NonNull CompatibilityInfo compatInfo,
+            @Nullable ClassLoader classLoader) {
+        try {
+            final ResourcesKey key = new ResourcesKey(
+                    resDir, // 应用apk文件的路径
+                    splitResDirs,
+                    overlayDirs,
+                    libDirs,
+                    displayId,
+                    overrideConfig != null ? new Configuration(overrideConfig) : null, // Copy
+                    compatInfo);
+            classLoader = classLoader != null ? classLoader : ClassLoader.getSystemClassLoader();
+            return getOrCreateResources(activityToken, key, classLoader);
+        } finally {
+            Trace.traceEnd(Trace.TRACE_TAG_RESOURCES);
+        }
+    }
+
+    private @Nullable Resources getOrCreateResources(@Nullable IBinder activityToken,
+            @NonNull ResourcesKey key, @NonNull ClassLoader classLoader) {
+        synchronized (this) {
+            // ... 
+            // 下面的代码创建了一个新的Resources对象
+            ResourcesImpl resourcesImpl = createResourcesImpl(key);
+            if (resourcesImpl == null) {
+                return null;
+            }
+            // Add this ResourcesImpl to the cache.
+            mResourceImpls.put(key, new WeakReference<>(resourcesImpl));
+            final Resources resources;
+            if (activityToken != null) {
+                resources = getOrCreateResourcesForActivityLocked(activityToken, classLoader,
+                        resourcesImpl, key.mCompatInfo);
+            } else {
+                // A处传入的参数为null，因此activityToken 为空执行如下代码
+                resources = getOrCreateResourcesLocked(classLoader, resourcesImpl, key.mCompatInfo);
+            }
+            return resources;
+        }
+    }
+}
+
+```
+
 
 ### 应用插件中的皮肤资源
 
 ### 自定义属性的管理
+
+## 参考链接
+
+- [深入浅出的理解Android resources.arsc文件](http://thinkdevos.net/2017/11/14/2017-11-14-arse/)
+- [Android资源管理框架（Asset Manager）简要介绍](https://blog.51cto.com/shyluo/1229262)

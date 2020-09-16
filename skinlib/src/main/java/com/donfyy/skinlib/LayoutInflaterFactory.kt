@@ -8,7 +8,7 @@ import com.blankj.utilcode.util.LogUtils
 import java.lang.reflect.Constructor
 import java.util.*
 
-class LayoutInflaterFactory : LayoutInflater.Factory2 {
+class LayoutInflaterFactory : LayoutInflater.Factory2, Observer {
     companion object {
         private val sConstructorMap = HashMap<String, Constructor<out View?>>()
         private val sClassPrefixList = arrayOf(
@@ -21,6 +21,7 @@ class LayoutInflaterFactory : LayoutInflater.Factory2 {
         private val sConstructorSignature = arrayOf(Context::class.java, AttributeSet::class.java)
     }
 
+    var skinViewManager = SkinViewManager()
 
     override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? {
         return if (-1 == name.indexOf('.')) {
@@ -63,11 +64,14 @@ class LayoutInflaterFactory : LayoutInflater.Factory2 {
                 sConstructorMap[name] = constructor
             }
             // 通过反射调用构造方法创建View
-            constructor.newInstance(viewContext, attr)
-            // TODO: 2020/9/15 收集view
+            constructor.newInstance(viewContext, attr).apply { this?.let { skinViewManager.look(it, attr) } }
         } catch (e: Exception) {
             LogUtils.d(":Error inflating class ${clazz?.name}")
             null
         }
+    }
+
+    override fun update(o: Observable?, arg: Any?) {
+        skinViewManager.applySkin()
     }
 }

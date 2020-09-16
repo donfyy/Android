@@ -21,7 +21,8 @@ class ActivityLifecycleCallback : Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityDestroyed(activity: Activity) {
-        map.remove(activity)
+        val factory = map.remove(activity)
+        SkinManager.deleteObserver(factory)
     }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
@@ -31,13 +32,10 @@ class ActivityLifecycleCallback : Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-        val factory = LayoutInflaterFactory()
-        map[activity] = factory
         try {
+            val factory = LayoutInflaterFactory()
+            map[activity] = factory
             if (sLayoutInflaterFactory2Field == null) {
-//                LayoutInflater::class.java.declaredFields.forEach {
-//                    LogUtils.d(it.name)
-//                }
                 sLayoutInflaterFactory2Field = LayoutInflater::class.java.getDeclaredField("mFactorySet")
             }
             sLayoutInflaterFactory2Field?.let {
@@ -48,12 +46,13 @@ class ActivityLifecycleCallback : Application.ActivityLifecycleCallbacks {
                         "factory2 = ${activity.layoutInflater.factory2}")
                 it.set(activity.layoutInflater, false)
             }
-        } catch (e: NoSuchFieldException) {
+            LayoutInflaterCompat.setFactory2(activity.layoutInflater, factory)
+            SkinManager.addObserver(factory)
+        } catch (e: Exception) {
             LogUtils.e("forceSetFactory2 Could not find field 'mFactorySet' on class "
                     + LayoutInflater::class.java.name
                     + "; inflation may have unexpected results.", e)
         }
-        LayoutInflaterCompat.setFactory2(activity.layoutInflater, factory)
     }
 
     override fun onActivityResumed(activity: Activity) {
