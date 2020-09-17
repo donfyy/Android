@@ -321,7 +321,7 @@ class SkinViewManager {
 
 ### 加载插件中的皮肤资源
 
-#### 如何加载皮肤中的资源？
+#### 系统是如何加载APK中的资源的？
 
 ```java
 class Context {
@@ -330,6 +330,34 @@ class Context {
         // 该Resources实例是在ContextImpl中赋值的
         return getResources().getDrawable(id, getTheme());
     }       
+}
+class Resources {
+    // getDrawable最终调用到该方法
+    public Drawable getDrawableForDensity(@DrawableRes int id, int density, @Nullable Theme theme) {
+        final TypedValue value = obtainTempTypedValue();
+        try {
+            final ResourcesImpl impl = mResourcesImpl;
+            // 这里可以看到Resources从 ResourcesImpl 去获取数据
+            impl.getValueForDensity(id, density, value, true);
+            return impl.loadDrawable(this, value, id, density, theme);
+        } finally {
+            releaseTempTypedValue(value);
+        }
+    }
+}
+class ResourcesImpl {
+    // ResourcesImpl 则从 mAssets 处获取数据 mAssets 是一个 AssetManager 的对象
+    // 因此可以得出结论 AssetManager 负责apk资源的加载与获取 
+    // 接下来查看 AssetManager 是如何创建的
+    // 从这里可以看出一个Resources有一个ResourcesImpl，一个ResourcesImpl又有一个AssetManager // B
+    void getValueForDensity(@AnyRes int id, int density, TypedValue outValue,
+            boolean resolveRefs) throws NotFoundException {
+        boolean found = mAssets.getResourceValue(id, density, outValue, resolveRefs);
+        if (found) {
+            return;
+        }
+        throw new NotFoundException("Resource ID #0x" + Integer.toHexString(id));
+    }
 }
 class ContextImpl {
     static ContextImpl createAppContext(ActivityThread mainThread, LoadedApk packageInfo,
@@ -388,7 +416,7 @@ class ResourcesManager {
         synchronized (this) {
             // ... 
             // 下面的代码创建了一个新的Resources对象
-            ResourcesImpl resourcesImpl = createResourcesImpl(key);
+            ResourcesImpl resourcesImpl = createResourcesImpl(key); // C
             if (resourcesImpl == null) {
                 return null;
             }
@@ -405,16 +433,153 @@ class ResourcesManager {
             return resources;
         }
     }
+    private @NonNull Resources getOrCreateResourcesLocked(@NonNull ClassLoader classLoader,
+            @NonNull ResourcesImpl impl, @NonNull CompatibilityInfo compatInfo) {
+        // ...
+        // 创建了一个新的Resources
+        Resources resources = compatInfo.needsCompatResources() ? new CompatResources(classLoader)
+                : new Resources(classLoader);
+        // 使用了传进来的ResourcesImpl对象，
+        // 根据B处的结论，回到C处进入createResourcesImpl方法查看ResourcesImpl是如何创建的
+        resources.setImpl(impl);
+        // ...
+        return resources;
+    }
+    private @Nullable ResourcesImpl createResourcesImpl(@NonNull ResourcesKey key) {
+        final DisplayAdjustments daj = new DisplayAdjustments(key.mOverrideConfiguration);
+        daj.setCompatibilityInfo(key.mCompatInfo);
+        final AssetManager assets = createAssetManager(key); // D
+        if (assets == null) {
+            return null;
+        }
+        final DisplayMetrics dm = getDisplayMetrics(key.mDisplayId, daj);
+        final Configuration config = generateConfig(key, dm);
+        // ResourcesImpl对象在此处创建出来了，同时传入了上文D处创建出来的AssetManager对象
+        final ResourcesImpl impl = new ResourcesImpl(assets, dm, config, daj);
+        // ...
+        return impl;
+    }
+    // 这个方法创建了一个AssetManager，并加载了ResourcesKey中的资源
+    protected @Nullable AssetManager createAssetManager(@NonNull final ResourcesKey key) {
+        final AssetManager.Builder builder = new AssetManager.Builder();
+        if (key.mResDir != null) {
+            try {
+                // 在这里将应用 apk 的路径添加到 AssetManager 中
+                // 这里的源码做了修改 Android8调用的是 AssetManager的构造方法，然后调用 AssetManager.addAssetPath
+                // 幸运地是无参构造方法与addAssetPath并没有被删除，因此我们可以使用这两个方法创建一个AssetManager
+                builder.addApkAssets(loadApkAssets(key.mResDir, false /*sharedLib*/, false /*overlay*/));
+            } catch (IOException e) {
+                Log.e(TAG, "failed to add asset path " + key.mResDir);
+                return null;
+            }
+        }
+        // ...
+        return builder.build();
+    }
 }
 
 ```
+#### 加载皮肤包中的资源
 
+经过上一小节的分析，我们可以利用AssetManager创建出一个用于加载皮肤包中的Resources对象
+
+```kotlin
+    @JvmStatic
+    fun loadSkin(skinPath: String?) {
+        if (skinPath.isNullOrEmpty()) {
+            resourceManager = ResourceManager(context.resources)
+            sp.reset()
+        } else {
+            try {
+                val appResources = context.resources
+                // 通过反射创建一个AssetManager对象
+                val assetManager = AssetManager::class.java.newInstance()
+                // 调用addAssetPath方法加载apk中的资源
+                val addAssetPath = assetManager.javaClass.getMethod("addAssetPath", String::class.java)
+                addAssetPath.invoke(assetManager, skinPath)
+                // 至此我们就得到了可以加载皮肤包中资源的对象，那么我们应该如何读取皮肤包中的资源呢？
+                val skinResource = Resources(assetManager, appResources.displayMetrics, appResources.configuration)
+                val packageName = context.packageManager?.getPackageArchiveInfo(skinPath, PackageManager.GET_ACTIVITIES)?.packageName
+                sp.skinPath = skinPath
+                resourceManager = ResourceManager(appResources, skinResource, packageName)
+            } catch (e: Exception) {
+                resourceManager = ResourceManager(context.resources)
+                sp.reset()
+                LogUtils.d("Exception: ", e)
+            }
+        }
+        setChanged()
+        notifyObservers()
+    }
+```
 
 ### 应用插件中的皮肤资源
+
+res目录下的资源文件会被aapt打包至apk里。aapt在编译打包资源文件时会执行以下两个操作
+
+- 为每一个非assets资源生成一个id，该id以常量的形式定义在R.java中
+- 生成resources.arsc文件，描述具有id值的资源的配置信息，也就是一个资源索引表
+
+有了资源id，我们就可以通过 ```java resources.getColor(R.color.colorPrimary); ``` 这种方式获取资源的信息。
+问题在于皮肤apk中与宿主apk中同名资源对应的id并不相同，那么如何获取皮肤apk中的同名资源呢？
+Resources里提供了如下API：
+```java
+class Resources {
+    // 一个资源的名字具有如下格式："package:type/entry". 该API根据资源的名字返回了资源的id
+    public int getIdentifier(String name, String defType, String defPackage) {
+        return mResourcesImpl.getIdentifier(name, defType, defPackage);
+    }
+    // 根据资源id返回资源名
+    public String getResourceEntryName(@AnyRes int resid) throws NotFoundException {
+        return mResourcesImpl.getResourceEntryName(resid);
+    }
+    // 根据资源id返回资源类型名
+    public String getResourceTypeName(@AnyRes int resid) throws NotFoundException {
+        return mResourcesImpl.getResourceTypeName(resid);
+    }
+}
+```
+因此我们可以利用上述API，先获取宿主apk中的资源id(resId)对应的资源名(name)及资源类型(type)，
+然后再根据该资源名(name)和资源类型(type)获取皮肤中的资源id(skinResId)。
+然后再去拿着皮肤中的资源id(skinResId)去加载皮肤中的资源。
+这就是加载皮肤资源的核心原理。
+
+```kotlin
+
+class ResourceManager(private val appResources: Resources,
+                      private val skinResources: Resources? = null,
+                      private val pkgName: String? = null) : ISKinResource {
+    // 读取皮肤包中的资源
+    override fun getColor(resId: Int): Int {
+        return if (isUsingDefaultSkin) {
+            appResources.getColor(resId)
+        } else {
+            // 获取皮肤apk中同名的资源id
+            val skinId = getIdentifier(resId)
+            if (skinId == 0) appResources.getColor(resId)
+            // 读取皮肤apk的资源
+            else skinResources!!.getColor(skinId)
+        }
+    }
+    override fun getIdentifier(resId: Int): Int {
+        if (isUsingDefaultSkin) return resId
+        // 在宿主apk中读取资源类型名
+        val typeName = appResources.getResourceTypeName(resId)
+        // 在宿主apk中读取资源名
+        val entryName = appResources.getResourceEntryName(resId)
+        // 读取皮肤apk中的同名资源id ， pkgName就是皮肤apk的包名。
+        return skinResources?.getIdentifier(entryName, typeName, pkgName) ?: resId
+    }
+}
+```
+
+至此就完成了插件化换肤的主要框架。
 
 ### 自定义属性的管理
 
 ## 参考链接
 
-- [深入浅出的理解Android resources.arsc文件](http://thinkdevos.net/2017/11/14/2017-11-14-arse/)
-- [Android资源管理框架（Asset Manager）简要介绍](https://blog.51cto.com/shyluo/1229262)
+- [Android 逆向笔记 —— ARSC 文件格式解析](https://juejin.im/post/6844903854165753863#heading-8)
+- [Android应用程序资源的编译和打包过程分析](https://blog.csdn.net/luoshengyang/article/details/8744683)
+- [Android应用程序资源的查找过程分析](https://blog.csdn.net/luoshengyang/article/details/8806798)
+

@@ -1,3 +1,4 @@
+include ':skin2'
 include ':util'
 include ':skinlib'
 include ':skin'
