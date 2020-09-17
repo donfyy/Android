@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.AssetManager
+import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import com.blankj.utilcode.util.LogUtils
@@ -14,10 +15,11 @@ interface ISKinResource {
     fun getColor(resId: Int): Int
     fun getDrawable(resId: Int): Drawable
     fun getIdentifier(resId: Int): Int
+    fun getColorStateList(resId: Int): ColorStateList
 }
 
 object SkinManager : Observable() {
-    lateinit var resourceManager: ResourceManager
+    lateinit var skinResources: SkinResources
     lateinit var context: Context
     lateinit var sp: SkinPreference
 
@@ -36,7 +38,7 @@ object SkinManager : Observable() {
     @JvmStatic
     fun loadSkin(skinPath: String?) {
         if (skinPath.isNullOrEmpty()) {
-            resourceManager = ResourceManager(context.resources)
+            skinResources = SkinResources(context.resources)
             sp.reset()
         } else {
             try {
@@ -47,9 +49,9 @@ object SkinManager : Observable() {
                 val skinResource = Resources(assetManager, appResources.displayMetrics, appResources.configuration)
                 val packageName = context.packageManager?.getPackageArchiveInfo(skinPath, PackageManager.GET_ACTIVITIES)?.packageName
                 sp.skinPath = skinPath
-                resourceManager = ResourceManager(appResources, skinResource, packageName)
+                skinResources = SkinResources(appResources, skinResource, packageName)
             } catch (e: Exception) {
-                resourceManager = ResourceManager(context.resources)
+                skinResources = SkinResources(context.resources)
                 sp.reset()
                 LogUtils.d("Exception: ", e)
             }
@@ -58,9 +60,9 @@ object SkinManager : Observable() {
         notifyObservers()
     }
 
-    class ResourceManager(private val appResources: Resources,
-                          private val skinResources: Resources? = null,
-                          private val pkgName: String? = null) : ISKinResource {
+    class SkinResources(private val appResources: Resources,
+                        private val skinResources: Resources? = null,
+                        private val pkgName: String? = null) : ISKinResource {
         private val isUsingDefaultSkin = skinResources == null || pkgName.isNullOrEmpty()
         override fun getBackground(resId: Int): Any {
             val typeName = appResources.getResourceTypeName(resId)
@@ -68,6 +70,15 @@ object SkinManager : Observable() {
             else getDrawable(resId)
         }
 
+        override fun getColorStateList(resId: Int): ColorStateList {
+            return if (isUsingDefaultSkin) {
+                appResources.getColorStateList(resId)
+            } else {
+                val skinId = getIdentifier(resId)
+                if (skinId == 0) appResources.getColorStateList(resId)
+                else skinResources!!.getColorStateList(skinId)
+            }
+        }
         override fun getColor(resId: Int): Int {
             return if (isUsingDefaultSkin) {
                 appResources.getColor(resId)

@@ -18,7 +18,8 @@ public class SkinActivity extends Activity {
     }
 
     public void change(View view) {
-        SkinManager.loadSkin("/data/data/com.donfyy.skin/skin/skin-debug.apk");
+        SkinManager.loadSkin("/data/data/com.donfyy.skin/skin/skin2-debug.apk");
+//        SkinManager.loadSkin("/data/data/com.donfyy.skin/skin/skin-debug.apk");
     }
 
     public void restore(View view) {

@@ -12,6 +12,12 @@
         android:layout_height="?actionBarSize"
         android:background="@drawable/toolbar" />
 
+    <!--测试换肤==>颜色-->
+    <ImageView
+        android:layout_margin="8dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?colorPrimary" />
 
     <Button
         android:layout_width="match_parent"
@@ -19,8 +25,6 @@
         android:onClick="skinSelect"
         android:text="选择皮肤"
         android:textColor="?colorPrimary" />
-
-
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"

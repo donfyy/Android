@@ -1,6 +1,7 @@
 package com.donfyy.skinlib.utils
 
 import android.content.Context
+import com.blankj.utilcode.util.LogUtils
 
 
 object ThemeUtils {
@@ -8,7 +9,10 @@ object ThemeUtils {
     fun getResId(context: Context, attrs: IntArray): IntArray {
         val resIds = IntArray(attrs.size)
         context.obtainStyledAttributes(attrs).apply {
-            attrs.forEachIndexed { idx, attrId -> resIds[idx] = getResourceId(attrId, 0) }
+            attrs.forEachIndexed {
+                idx, attrId ->
+                LogUtils.d("attrValue", attrId, getResourceId(idx, 0))
+                resIds[idx] = getResourceId(idx, 0) }
             recycle()
         }
         return resIds
