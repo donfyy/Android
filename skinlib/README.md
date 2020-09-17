@@ -520,7 +520,7 @@ res目录下的资源文件会被aapt打包至apk里。aapt在编译打包资源
 - 为每一个非assets资源生成一个id，该id以常量的形式定义在R.java中
 - 生成resources.arsc文件，描述具有id值的资源的配置信息，也就是一个资源索引表
 
-有了资源id，我们就可以通过 ```java resources.getColor(R.color.colorPrimary); ``` 这种方式获取资源的信息。
+有了资源id，我们就可以通过 ```resources.getColor(R.color.colorPrimary); ``` 这种方式获取资源的信息。
 问题在于皮肤apk中与宿主apk中同名资源对应的id并不相同，那么如何获取皮肤apk中的同名资源呢？
 Resources里提供了如下API：
 ```java
