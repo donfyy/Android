@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:gravity="center" />
 
-    <com.xiangxue.willremove.intercept.innerintercept.InnerListView
+    <com.donfyy.willremove.intercept.innerintercept.InnerListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

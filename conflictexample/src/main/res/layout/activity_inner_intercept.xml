@@ -5,7 +5,7 @@
     android:background="#ffffff"
     android:orientation="vertical" >
 
-    <com.xiangxue.willremove.intercept.innerintercept.InnerSimpleViewPager
+    <com.donfyy.willremove.intercept.innerintercept.InnerSimpleViewPager
         android:id="@+id/container"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />

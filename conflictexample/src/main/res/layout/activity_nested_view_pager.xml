@@ -6,7 +6,7 @@
         android:id="@+id/swipe_refresh_layout"
         android:layout_height="match_parent">
 
-        <com.xiangxue.e_conflictfixcases.nestedscroll.NestedScrollLayout
+        <com.donfyy.e_conflictfixcases.nestedscroll.NestedScrollLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -16,7 +16,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <com.xiangxue.e_conflictfixcases.nestedscroll.views.xxrecyclerview.ScrollDisabledRecyclerView
+                <com.donfyy.e_conflictfixcases.nestedscroll.views.xxrecyclerview.ScrollDisabledRecyclerView
                     android:id="@+id/combo_top_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -37,7 +37,7 @@
                         android:layout_height="match_parent" />
                 </LinearLayout>
             </LinearLayout>
-        </com.xiangxue.e_conflictfixcases.nestedscroll.NestedScrollLayout>
+        </com.donfyy.e_conflictfixcases.nestedscroll.NestedScrollLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>

@@ -5,7 +5,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.xiangxue.a_conflictdemo.TestHorizontalScrollView
+        <com.donfyy.a_conflictdemo.TestHorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -17,6 +17,6 @@
                 android:gravity="center"
                 android:text="viewpager innner textview viewpager innner textview viewpager innner textview viewpager innner textview viewpager innner textview viewpager innner textview" />
 
-        </com.xiangxue.a_conflictdemo.TestHorizontalScrollView>
+        </com.donfyy.a_conflictdemo.TestHorizontalScrollView>
     </LinearLayout>
 </layout>

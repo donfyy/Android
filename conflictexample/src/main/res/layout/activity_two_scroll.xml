@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:id="@+id/rl_root">
 
-    <com.xiangxue.willremove.testlist.weight.OutRecyclerView
+    <com.donfyy.willremove.testlist.weight.OutRecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

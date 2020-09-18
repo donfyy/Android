@@ -22,7 +22,7 @@
 		android:layout_height="match_parent"
 		android:orientation="vertical">
 
-		<com.xiangxue.b_viewarchitecture.views.RootView
+		<com.donfyy.b_viewarchitecture.views.RootView
 
 			xmlns:tools="http://schemas.android.com/tools"
 			android:layout_width="match_parent"
@@ -30,27 +30,27 @@
 			android:layout_margin="20dp"
 			android:background="#4E5268">
 
-			<com.xiangxue.b_viewarchitecture.views.ViewGroupA
+			<com.donfyy.b_viewarchitecture.views.ViewGroupA
 				android:layout_width="match_parent"
 				android:layout_height="300dp"
 				android:background="@android:color/black">
 
-				<com.xiangxue.b_viewarchitecture.views.View1
+				<com.donfyy.b_viewarchitecture.views.View1
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="200dp"
 					android:background="#BDDA66" />
 
-				<com.xiangxue.b_viewarchitecture.views.View2
+				<com.donfyy.b_viewarchitecture.views.View2
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="200dp"
 					android:layout_marginLeft="20dp"
 					android:background="#00DA00" />
 
-			</com.xiangxue.b_viewarchitecture.views.ViewGroupA>
+			</com.donfyy.b_viewarchitecture.views.ViewGroupA>
 
-		</com.xiangxue.b_viewarchitecture.views.RootView>
+		</com.donfyy.b_viewarchitecture.views.RootView>
 
 		<TextView
 			android:layout_gravity="center"

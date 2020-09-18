@@ -2,11 +2,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <com.xiangxue.c_scroll.case3.Case3ViewGroup
+    <com.donfyy.c_scroll.case3.Case3ViewGroup
         android:id="@+id/container_viewgroup"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </com.xiangxue.c_scroll.case3.Case3ViewGroup>
+    </com.donfyy.c_scroll.case3.Case3ViewGroup>
 
     <LinearLayout
         android:layout_width="match_parent"

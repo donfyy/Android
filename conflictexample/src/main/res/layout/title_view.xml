@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.xiangxue.e_conflictfixcases.nestedscroll.views.titleview.TitleViewViewModel" />
+            type="com.donfyy.e_conflictfixcases.nestedscroll.views.titleview.TitleViewViewModel" />
 
         <import type="android.view.View" />
         <import type="android.text.TextUtils" />

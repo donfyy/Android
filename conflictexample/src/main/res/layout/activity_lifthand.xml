@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.xiangxue.d_innerouterconflict.outerinterceptlifthand.lifthand.VerContainerView2
+    <com.donfyy.d_innerouterconflict.outerinterceptlifthand.lifthand.VerContainerView2
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -16,11 +16,11 @@
             android:layout_height="match_parent"
             android:background="@android:color/white"/>
 
-        <com.xiangxue.d_innerouterconflict.outerinterceptlifthand.lifthand.MyListView2
+        <com.donfyy.d_innerouterconflict.outerinterceptlifthand.lifthand.MyListView2
             android:id="@+id/listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-    </com.xiangxue.d_innerouterconflict.outerinterceptlifthand.lifthand.VerContainerView2>
+    </com.donfyy.d_innerouterconflict.outerinterceptlifthand.lifthand.VerContainerView2>
 
 </LinearLayout>
