@@ -1,14 +1,16 @@
 package com.donfyy.skinlib
 
+import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import com.blankj.utilcode.util.LogUtils
+import com.donfyy.skinlib.utils.ThemeUtils
 import java.lang.reflect.Constructor
 import java.util.*
 
-class LayoutInflaterFactory : LayoutInflater.Factory2, Observer {
+class LayoutInflaterFactory(val activity: Activity) : LayoutInflater.Factory2, Observer {
     companion object {
         private val sConstructorMap = HashMap<String, Constructor<out View?>>()
         private val sClassPrefixList = arrayOf(
@@ -51,7 +53,7 @@ class LayoutInflaterFactory : LayoutInflater.Factory2, Observer {
 
     private fun createView(viewContext: Context, name: String, prefix: String?, attr: AttributeSet): View? {
         var constructor: Constructor<out View?>? = sConstructorMap[name]
-        LogUtils.d("createView(prefix = $prefix,name = $name)")
+//        LogUtils.d("createView(prefix = $prefix,name = $name)")
         var clazz: Class<out View?>? = null
         return try {
             if (constructor == null) {
@@ -72,6 +74,7 @@ class LayoutInflaterFactory : LayoutInflater.Factory2, Observer {
     }
 
     override fun update(o: Observable?, arg: Any?) {
+        ThemeUtils.updateStatusBar(activity)
         skinViewManager.applySkin()
     }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.view.LayoutInflaterCompat
 import com.blankj.utilcode.util.LogUtils
+import com.donfyy.skinlib.utils.ThemeUtils
 import java.lang.reflect.Field
 
 class ActivityLifecycleCallback : Application.ActivityLifecycleCallbacks {
@@ -33,7 +34,8 @@ class ActivityLifecycleCallback : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         try {
-            val factory = LayoutInflaterFactory()
+            ThemeUtils.updateStatusBar(activity)
+            val factory = LayoutInflaterFactory(activity)
             map[activity] = factory
             if (sLayoutInflaterFactory2Field == null) {
                 sLayoutInflaterFactory2Field = LayoutInflater::class.java.getDeclaredField("mFactorySet")
