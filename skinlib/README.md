@@ -582,4 +582,4 @@ class ResourceManager(private val appResources: Resources,
 - [Android 逆向笔记 —— ARSC 文件格式解析](https://juejin.im/post/6844903854165753863#heading-8)
 - [Android应用程序资源的编译和打包过程分析](https://blog.csdn.net/luoshengyang/article/details/8744683)
 - [Android应用程序资源的查找过程分析](https://blog.csdn.net/luoshengyang/article/details/8806798)
-
+- [Android styling: themes vs styles](https://medium.com/androiddevelopers/android-styling-themes-vs-styles-ebe05f917578)
