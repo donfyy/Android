@@ -2,12 +2,12 @@ package com.donfyy.a_conflictdemo;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
-import com.google.android.material.tabs.TabLayout;
 import com.donfyy.conflict.R;
 import com.donfyy.conflict.databinding.FragmentHomeBinding;
+import com.google.android.material.tabs.TabLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 public class ConflictActivity extends AppCompatActivity {
     public ConflictFragmentAdapter adapter;
