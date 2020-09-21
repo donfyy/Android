@@ -53,6 +53,46 @@ void example01()
     t1.print();
 }
 
+struct TestStruct
+{
+    int b;
+
+private:
+    int a;
+
+public:
+    TestStruct(int a_) : a(a_)
+    {
+        cout << "TestStruct(int) " << this << endl;
+    }
+    ~TestStruct()
+    {
+        cout << "~TestStruct() " << this << endl;
+    }
+};
+    class Date1
+    {
+        int d, m, y;
+
+    public:
+        Date1(int, int, int);
+        void add_year(int);
+    };
+    struct Date2
+    {
+    private:
+        int d, m, y;
+
+    public:
+        Date2(int, int, int);
+        void add_year();
+    };
+void example01_struct()
+{
+    TestStruct t(1);
+    cout << "t.b = " << t.b << endl;
+}
+
 //构造函数分类
 class Test2
 {
@@ -139,7 +179,7 @@ void example02_01()
     // t1.print();    // 2
     // Test2 t3 = t1; // 调用拷贝构造函数 对象初始化
     // Test2 t4(t1);  // 调用拷贝构造函数 对象初始化
-    Test2 t(1);
+    const Test2 t(1);
     takingObject(t); // 调用拷贝构造函数
 }
 
@@ -210,56 +250,55 @@ void example04()
 // 析构函数 4 5 returnObject的t被析构
 // print 4 5
 // 析构函数 4 5
-
 static int g_id;
-    class Test3
-    {
-    public:
-        Test3();
-        Test3(const char *arg);
-        Test3(const Test3 &t);
-        ~Test3();
-        Test3 &operator=(Test3 &t);
-        void print();
+class Test3
+{
+public:
+    Test3();
+    Test3(const char *arg);
+    Test3(const Test3 &t);
+    ~Test3();
+    Test3 &operator=(Test3 &t);
+    void print();
 
-    private:
-        int id = g_id++;
-        char *p;
-    };
-    Test3::Test3()
-    {
-        p = (char *)malloc(100);
-        strcpy(p, "steady!");
-        cout << "Test3(): id = " << id << endl;
-    }
-    Test3::Test3(const char *arg)
-    {
-        p = (char *)malloc(100);
-        strcpy(p, arg);
-        cout << "Test3(const char*): id = " << id << endl;
-    }
-    Test3::Test3(const Test3 &t)
-    {
-        p = (char *)malloc(100);
-        strcpy(p, t.p);
-        cout << "Test3(const Test3 &): id = " << id << endl;
-        // p = t.p; Oops! t1和t2指向了同一块堆内存，t1被析构后，该堆内存被释放，但t2仍在使用该堆内存
-    }
-    Test3::~Test3()
-    {
-        if (p != NULL)
-            free(p);
-        cout << "~Test3() :id = " << id << endl;
-    }
-    Test3 &Test3::operator=(Test3 &t)
-    {
-        strcpy(p, t.p);
-        return *this;
-    }
-    void Test3::print()
-    {
-        cout << "id: " << id << " p: " << p << endl;
-    }
+private:
+    int id = g_id++;
+    char *p;
+};
+Test3::Test3()
+{
+    p = (char *)malloc(100);
+    strcpy(p, "steady!");
+    cout << "Test3(): id = " << id << endl;
+}
+Test3::Test3(const char *arg)
+{
+    p = (char *)malloc(100);
+    strcpy(p, arg);
+    cout << "Test3(const char*): id = " << id << endl;
+}
+Test3::Test3(const Test3 &t)
+{
+    p = (char *)malloc(100);
+    strcpy(p, t.p);
+    cout << "Test3(const Test3 &): id = " << id << endl;
+    // p = t.p; Oops! t1和t2指向了同一块堆内存，t1被析构后，该堆内存被释放，但t2仍在使用该堆内存
+}
+Test3::~Test3()
+{
+    if (p != NULL)
+        free(p);
+    cout << "~Test3() :id = " << id << endl;
+}
+Test3 &Test3::operator=(Test3 &t)
+{
+    strcpy(p, t.p);
+    return *this;
+}
+void Test3::print()
+{
+    cout << "id: " << id << " p: " << p << endl;
+}
 class Test4
 {
 private:
@@ -281,21 +320,21 @@ void Test4::print()
     cout << "id = " << id << " value = " << value << endl;
 }
 
-    // 赋值运算符以及拷贝构造函数的默认实现是浅拷贝，
-    // 如果类内部分配了堆内存，则该类需要重写析构函数，拷贝构造函数，以及赋值运算符等。
-    // 构造函数的调用顺序：t1 -> t2 -> t3
-    // 析构函数的调用顺序：t1 <- t2 <- t3
-    void example05()
-    {
-        Test3 t1("t1");
-        t1.print();
-        Test3 t2 = t1;
-        t2.print();
-        Test3 t3("t3");
-        t3.print();
-        t3 = t1;
-        t3.print();
-    }
+// 赋值运算符以及拷贝构造函数的默认实现是浅拷贝，
+// 如果类内部分配了堆内存，则该类需要重写析构函数，拷贝构造函数，以及赋值运算符等。
+// 构造函数的调用顺序：t1 -> t2 -> t3
+// 析构函数的调用顺序：t1 <- t2 <- t3
+void example05()
+{
+    Test3 t1("t1");
+    t1.print();
+    Test3 t2 = t1;
+    t2.print();
+    Test3 t3("t3");
+    t3.print();
+    t3 = t1;
+    t3.print();
+}
 
 void example06()
 {
@@ -312,11 +351,12 @@ void example06()
 int main()
 {
     // example01();
+    example01_struct();
     // example02_01();
     // example03();
     // example04();
-    example05();
-    example06();
+    // example05();
+    // example06();
 
     return 0;
 }
