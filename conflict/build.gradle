@@ -7,10 +7,11 @@ android {
     buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
         applicationId "com.donfyy.conflict"
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+
     }
     signingConfigs {
         release {
@@ -38,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation project(":util")
     implementation rootProject.ext.dependencies.coreKtx
     implementation rootProject.ext.dependencies.kotlinStdlibJdk7
     implementation rootProject.ext.dependencies.appcompat

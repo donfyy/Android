@@ -23,20 +23,46 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.donfyy.conflict.R;
+import com.blankj.utilcode.util.LogUtils;
 import com.donfyy.b_viewarchitecture.views.Static;
+import com.donfyy.conflict.R;
+import com.donfyy.conflict.databinding.ActivityTouchEventDemoBinding;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 
 public class TouchEventDemoActivity extends AppCompatActivity {
     private static final String TAG = Static.TAG1;
+    private ActivityTouchEventDemoBinding mBinding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_touch_event_demo);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_touch_event_demo);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mBinding.ll1.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                test();
+            }
+        }, 2000);
+    }
+
+    private void test() {
+        int[] location = new int[2];
+        mBinding.ll1.getLocationInWindow(location);
+        LogUtils.d(location[0], location[1]);
+        mBinding.rootView1.getLocationInWindow(location);
+        LogUtils.d(location[0], location[1], mBinding.rootView1.getTop());
+        mBinding.ll1.scrollBy(0, 200);
+        mBinding.rootView1.getLocationInWindow(location);
+        LogUtils.d(location[0], location[1], mBinding.rootView1.getTop());
     }
 
     @Override

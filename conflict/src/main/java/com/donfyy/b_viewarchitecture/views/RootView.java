@@ -25,6 +25,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
+import com.blankj.utilcode.util.LogUtils;
+
 public class RootView extends RelativeLayout {
     private static final String TAG = Static.TAG2;
 
@@ -42,6 +44,7 @@ public class RootView extends RelativeLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        LogUtils.d("top:", getTop(), ev.getY());
         Static.printMotionEventAction(TAG, "dispatchTouchEvent", ev);
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             Log.i(TAG, Static.dispatchTouchEvent);
