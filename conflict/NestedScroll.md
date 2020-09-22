@@ -465,7 +465,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
                 // 记下滑动起点坐标
                 mLastMotionY = (int) ev.getY();
                 mActivePointerId = ev.getPointerId(0);
-                // 开始嵌套滑动
+                // 开始触摸嵌套滑动
                 startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_TOUCH);
                 break;
             }
@@ -536,15 +536,106 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
                     if (!dispatchNestedPreFling(0, -initialVelocity)) {
                         // 如果父View没有消费，通知父View自己消费了
                         dispatchNestedFling(0, -initialVelocity, true);
+                        // 因为惯性滑动只能有一个View消费掉，这里通常还是发起嵌套滑动的子孙View消费掉
+                        // 那么，实际上我们自己实现二级嵌套滑动的时候只要在祖先View中重写OnNestedPreScroll就行了
+                        // 原因在于fling方法开启非触摸的嵌套滑动，所以祖先View也可以进行惯性滑动
                         fling(-initialVelocity);
                     }
                 } 
                 // ...
+                // 停止触摸嵌套滑动
+                endDrag();
                 break;
+                case MotionEvent.ACTION_CANCEL:
+                // ...
+                // 停止触摸嵌套滑动
+                endDrag();
             // ...
         }
         // ...
         return true;
+    }
+
+    private void endDrag() {
+        // ...
+        stopNestedScroll(ViewCompat.TYPE_TOUCH);
+        // ...
+    }
+    
+    // 消费惯性滑动
+    public void fling(int velocityY) {
+        if (getChildCount() > 0) {
+            // 使用OverScroller进行惯性滑动
+            mScroller.fling(getScrollX(), getScrollY(), // start
+                    0, velocityY, // velocities
+                    0, 0, // x
+                    Integer.MIN_VALUE, Integer.MAX_VALUE, // y
+                    0, 0); // overscroll
+            // 开始惯性滑动
+            runAnimatedScroll(true);
+        }
+    }
+
+    private void runAnimatedScroll(boolean participateInNestedScrolling) {
+        if (participateInNestedScrolling) {
+            // 这里启动了非触摸的嵌套滑动
+            startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_NON_TOUCH);
+        } else {
+            stopNestedScroll(ViewCompat.TYPE_NON_TOUCH);
+        }
+        mLastScrollerY = getScrollY();
+        // 启动动画开始嵌套滑动
+        // 在下一帧触发重绘draw会被调用，从而调用computeScroll方法
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+
+    @Override
+    public void computeScroll() {
+        if (mScroller.isFinished()) {
+            return;
+        }
+        // 计算当前滑动到的位置
+        mScroller.computeScrollOffset();
+        final int y = mScroller.getCurrY();
+        // 计算出需要滑动距离
+        int unconsumed = y - mLastScrollerY;
+        mLastScrollerY = y;
+
+        mScrollConsumed[1] = 0;
+        // 将滑动距离先分发给父View消费
+        dispatchNestedPreScroll(0, unconsumed, mScrollConsumed, null,
+                ViewCompat.TYPE_NON_TOUCH);
+        unconsumed -= mScrollConsumed[1];
+
+        final int range = getScrollRange();
+
+        if (unconsumed != 0) {
+            final int oldScrollY = getScrollY();
+            // 消费剩余的滑动距离
+            overScrollByCompat(0, unconsumed, getScrollX(), oldScrollY, 0, range, 0, 0, false);
+            final int scrolledByMe = getScrollY() - oldScrollY;
+            unconsumed -= scrolledByMe;
+            // 再将剩余的滑动距离发送给父View消费
+            mScrollConsumed[1] = 0;
+            dispatchNestedScroll(0, scrolledByMe, 0, unconsumed, mScrollOffset,
+                    ViewCompat.TYPE_NON_TOUCH, mScrollConsumed);
+            unconsumed -= mScrollConsumed[1];
+        }
+
+        if (unconsumed != 0) {
+            // ...
+            // 滑动到了内容的底部就停止非触摸嵌套滑动
+            abortAnimatedScroll();
+        }
+
+        if (!mScroller.isFinished()) {
+            // 如果没有滑动结束，就继续滑动
+            ViewCompat.postInvalidateOnAnimation(this);
+        } else {
+            // 滑动结束了，停止非触摸嵌套滑动
+            // 至此，就完成了惯性嵌套滑动的分析。
+            stopNestedScroll(ViewCompat.TYPE_NON_TOUCH);
+        }
     }
 
     boolean overScrollByCompat(int deltaX, int deltaY,

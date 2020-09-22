@@ -10,5 +10,6 @@
     <string name="webview_conflict">Webview滑动冲突</string>
     <string name="two_scroll">二级联动</string>
     <string name="nested_scroll">二级嵌套滑动</string>
+    <string name="hello_blank_fragment">NestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as childNestedScrollView as child</string>
 
 </resources>
