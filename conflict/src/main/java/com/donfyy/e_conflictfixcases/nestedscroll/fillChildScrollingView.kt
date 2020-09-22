@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.LogUtils
 import com.donfyy.e_conflictfixcases.nestedscroll.utils.FlingHelper
 
-class NestedScrollLayout
+class fillChildScrollingView
 @JvmOverloads constructor(context: Context,
                           attrs: AttributeSet? = null,
                           defStyleAttr: Int = 0)
@@ -65,8 +65,10 @@ class NestedScrollLayout
     //
     private fun childFling(velY: Int) {
         scrollChildView.clear()
-        val childRecyclerView = getChildRecyclerView(contentView)
-        childRecyclerView?.fling(0, velY)
+        if (fillChildScrollingView(contentView)){
+            scrollChildView.recyclerView?.fling(0, velY)
+        }
+//        childRecyclerView?.fling(0, velY)
     }
 
     //
@@ -118,36 +120,33 @@ class NestedScrollLayout
         }
     }
 
-    private fun getChildRecyclerView(viewGroup: ViewGroup) {
+    private fun fillChildScrollingView(viewGroup: ViewGroup): Boolean {
         for (i in 0 until viewGroup.childCount) {
             val view = viewGroup.getChildAt(i)
             when (view) {
                 is RecyclerView -> {
                     scrollChildView.recyclerView = view
-                    return
+                    return true
                 }
                 is NestedScrollView -> {
                     scrollChildView.nestedScrollView = view
-                    return
+                    return true
                 }
                 is ViewGroup -> {
-                    getChildRecyclerView(view)
-                    if (scrollChildView.find()) return
+                    if (fillChildScrollingView(view)) return true
                 }
             }
         }
-
-        class ScrollingChild {
-            var recyclerView: RecyclerView? = null
-            var nestedScrollView: NestedScrollView? = null
-            fun clear() {
-                recyclerView = null
-                nestedScrollView = null
-            }
-
-            fun find(): Boolean {
-                return recyclerView != null || nestedScrollView != null
-            }
-        }
-
+        return false
     }
+
+    class ScrollingChild {
+        var recyclerView: RecyclerView? = null
+        var nestedScrollView: NestedScrollView? = null
+        fun clear() {
+            recyclerView = null
+            nestedScrollView = null
+        }
+    }
+
+}

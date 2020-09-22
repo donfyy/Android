@@ -735,6 +735,10 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 }
 ```
 
+### RecyclerView
+
+RecyclerView的嵌套滑动源码和NestedScrollView类似，不过RecyclerView使用了ViewFlinger来处理惯性滑动。
+
 ## 二级嵌套滑动实现
 
 ```kotlin
