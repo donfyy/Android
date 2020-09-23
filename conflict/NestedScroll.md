@@ -709,6 +709,20 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
         onNestedScrollInternal(dyUnconsumed, type, null);
     }
 
+    // 注意NestedScrollView在子View消费了滑动距离后，自己消费了尽可能多的剩余的所有滑动距离
+    private void onNestedScrollInternal(int dyUnconsumed, int type, @Nullable int[] consumed) {
+        final int oldScrollY = getScrollY();
+        scrollBy(0, dyUnconsumed);
+        final int myConsumed = getScrollY() - oldScrollY;
+
+        if (consumed != null) {
+            consumed[1] += myConsumed;
+        }
+        final int myUnconsumed = dyUnconsumed - myConsumed;
+
+        mChildHelper.dispatchNestedScroll(0, myConsumed, 0, myUnconsumed, null, type, consumed);
+    }
+
     @Override
     public void onNestedPreScroll(@NonNull View target, int dx, int dy, @NonNull int[] consumed,
             int type) {
@@ -754,5 +768,52 @@ class NestedScrollLayout
     // 内容区域的父容器
     private lateinit var contentView: ViewGroup
  
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        // 调整contentView的高度为父容器高度，使之填充布局，避免父容器滑动后出现空白
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        val lp = contentView.layoutParams
+        lp.height = measuredHeight
+        contentView.layoutParams = lp
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    }
+
+    // 参与子孙View发起的触摸嵌套滑动和惯性嵌套滑动
+    override fun onNestedPreScroll(target: View, dx: Int, dy: Int, consumed: IntArray, type: Int) {
+        // 若当前headerView可见，需要将headerView滑动至不可见
+        // 我们这里只需要重写这个方法就行了，onNestedScroll方法消费了子View没有消费的滑动距离
+        val hideTop = dy > 0 && scrollY < headerView.measuredHeight
+        if (hideTop) {
+            val consumedDy = minOf(headerView.measuredHeight - scrollY, dy)
+            scrollBy(0, consumedDy)
+            consumed[1] = consumedDy
+        }
+    }
+    
+    // 处理自身发起的惯性滑动
+    override fun fling(velocityY: Int) {
+        super.fling(velocityY)
+        // 记录是否在惯性滑动
+        isInFling = true
+        // 记录下惯性滑动开始时的滑动位置
+        startScrollY = scrollY
+        // 记录下惯性滑动开始时的速度
+        startVelocityY = velocityY
+    }
+
+    init {
+        // 监听自身的滑动，当用户从headerView进行滑动时，使得多余的滑动距离委托给子View进行处理。
+        setOnScrollChangeListener { _, _, _, _, _ ->
+            // 自身滑动到底部
+            if (scrollY == headerView.measuredHeight) {
+                // 如果惯性滑动是由自身触发的，找到嵌套滑动的子View把惯性滑动分发给它们
+                if (isInFling) {
+                    isInFling = false
+                    dispatchChildFling()
+                }
+            }
+        }
+    }
 } 
 ```
+
+总结来说，二级嵌套滑动的实现还是比较容易的。

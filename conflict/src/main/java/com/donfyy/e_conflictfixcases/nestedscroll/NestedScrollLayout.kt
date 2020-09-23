@@ -2,10 +2,12 @@ package com.donfyy.e_conflictfixcases.nestedscroll
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.LogUtils
 import com.donfyy.e_conflictfixcases.nestedscroll.utils.FlingHelper
 
@@ -17,80 +19,60 @@ class NestedScrollLayout
     private lateinit var headerView: View
     private lateinit var contentView: ViewGroup
     private var flingHelper: FlingHelper = FlingHelper(this.context)
-    private var totalDy = 0
     private val scrollChildView = ScrollingChild()
 
-    //
-//    // 用于判断RecyclerView是否在fling
-    private var isStartFling = false
+    private var isInFling = false
+    private var startScrollY = 0
+    private var startVelocityY = 0
 
-    //
-//    // 记录当前滑动的y轴加速度
-    private var velocityY = 0
-
-    //
     init {
         // 监听自身的滑动，当用户从headerView进行滑动时，使得多余的滑动距离委托给子View进行处理。
-        setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-            LogUtils.d("..")
-            if (isStartFling) {
-                totalDy = 0
-                isStartFling = false
+        setOnScrollChangeListener { _, _, _, _, _ ->
+            // 自身滑动到底部
+            if (scrollY == headerView.measuredHeight) {
+                // 如果惯性滑动是由自身触发的，找到嵌套滑动的子View把惯性滑动分发给它们
+                if (isInFling) {
+                    LogUtils.d("isInFling")
+                    isInFling = false
+                    dispatchChildFling()
+                }
             }
-            if (scrollY == 0) {
-                LogUtils.i("TOP SCROLL")
-                // refreshLayout.setEnabled(true);
-            }
-            if (scrollY == getChildAt(0).measuredHeight - v.measuredHeight) {
-                LogUtils.i("BOTTOM SCROLL", getChildAt(0).measuredHeight, v.measuredHeight, measuredHeight, headerView.measuredHeight)
-                dispatchChildFling()
-            }
-            //在RecyclerView fling情况下，记录当前RecyclerView在y轴的偏移
-            totalDy += scrollY - oldScrollY
         }
     }
 
     private fun dispatchChildFling() {
-        if (velocityY != 0) {
-            val splineFlingDistance = flingHelper.getSplineFlingDistance(velocityY)
-            LogUtils.d(splineFlingDistance, totalDy)
-            if (splineFlingDistance > totalDy) {
-                childFling(flingHelper.getVelocityByDistance(splineFlingDistance - totalDy))
+        if (startVelocityY != 0) {
+            // 计算自己已经滑动的距离
+            val consumedDy = scrollY - startScrollY
+            // 计算可以滑动的总距离
+            val totalDy = flingHelper.getSplineFlingDistance(startVelocityY)
+            if (totalDy > consumedDy) {
+                // 将剩余的滑动距离转换成速度分发给嵌套滑动子View
+                flingChild(flingHelper.getVelocityByDistance(totalDy - consumedDy))
             }
+            startVelocityY = 0
         }
-        totalDy = 0
-        velocityY = 0
     }
 
-    //
-    private fun childFling(velY: Int) {
+    private fun flingChild(velY: Int) {
         scrollChildView.clear()
-        val childRecyclerView = getChildRecyclerView(contentView)
-        childRecyclerView?.fling(0, velY)
+        // 找到嵌套滑动子View
+        if (fillChildScrollingView(contentView)) {
+            // 把惯性滑动分发给它们
+            scrollChildView.recyclerView?.fling(0, velY)
+            scrollChildView.nestedScrollView?.fling(velY)
+        }
     }
 
-    //
-//    override fun onNestedPreFling(target: View, velocityX: Float, velocityY: Float): Boolean {
-//        val onNestedPreFling = super.onNestedPreFling(target, velocityX, velocityY)
-//        LogUtils.d(onNestedPreFling)
-//        return onNestedPreFling
-//    }
-//
-//    override fun onNestedFling(target: View, velocityX: Float, velocityY: Float, consumed: Boolean): Boolean {
-//        val onNestedFling = super.onNestedFling(target, velocityX, velocityY, consumed)
-//        LogUtils.d(target.javaClass.name, velocityY, consumed, onNestedFling)
-//        return onNestedFling
-//    }
-//
+    // 处理自身发起的惯性滑动
     override fun fling(velocityY: Int) {
         super.fling(velocityY)
-        LogUtils.d(velocityY)
-        if (velocityY <= 0) {
-            this.velocityY = 0
-        } else {
-            isStartFling = true
-            this.velocityY = velocityY
-        }
+        // 记录是否在惯性滑动
+        isInFling = true
+        // 记录下惯性滑动开始时的滑动位置
+        startScrollY = scrollY
+        // 记录下惯性滑动开始时的速度
+        startVelocityY = velocityY
     }
 
     override fun onFinishInflate() {
@@ -100,7 +82,7 @@ class NestedScrollLayout
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        // 调整contentView的高度为父容器高度，使之填充布局，避免父容器滚动后出现空白
+        // 调整contentView的高度为父容器高度，使之填充布局，避免父容器滑动后出现空白
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val lp = contentView.layoutParams
         lp.height = measuredHeight
@@ -108,46 +90,57 @@ class NestedScrollLayout
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        return super.onInterceptTouchEvent(ev)
+    }
+
+    // 参与子孙View发起的触摸嵌套滑动和惯性嵌套滑动
     override fun onNestedPreScroll(target: View, dx: Int, dy: Int, consumed: IntArray, type: Int) {
-        LogUtils.d("..")
         // 若当前headerView可见，需要将headerView滑动至不可见
         val hideTop = dy > 0 && scrollY < headerView.measuredHeight
         if (hideTop) {
-            scrollBy(0, dy)
-            consumed[1] = dy
+            val consumedDy = minOf(headerView.measuredHeight - scrollY, dy)
+            LogUtils.d(dy)
+            scrollBy(0, consumedDy)
+            consumed[1] = consumedDy
         }
     }
 
-    private fun getChildRecyclerView(viewGroup: ViewGroup) {
+    private fun fillChildScrollingView(viewGroup: ViewGroup): Boolean {
+        if (viewGroup is ViewPager2) {
+            val recyclerView = viewGroup.getChildAt(0)as RecyclerView
+            val child = recyclerView.findViewHolderForAdapterPosition(viewGroup.currentItem)?.itemView
+            if (child is ViewGroup) {
+                return fillChildScrollingView(child)
+            }
+            return false
+        }
         for (i in 0 until viewGroup.childCount) {
             val view = viewGroup.getChildAt(i)
             when (view) {
                 is RecyclerView -> {
                     scrollChildView.recyclerView = view
-                    return
+                    return true
                 }
                 is NestedScrollView -> {
                     scrollChildView.nestedScrollView = view
-                    return
+                    return true
                 }
                 is ViewGroup -> {
-                    getChildRecyclerView(view)
-                    if (scrollChildView.find()) return
+                    if (fillChildScrollingView(view)) return true
                 }
             }
         }
-
-        class ScrollingChild {
-            var recyclerView: RecyclerView? = null
-            var nestedScrollView: NestedScrollView? = null
-            fun clear() {
-                recyclerView = null
-                nestedScrollView = null
-            }
-
-            fun find(): Boolean {
-                return recyclerView != null || nestedScrollView != null
-            }
-        }
-
+        return false
     }
+
+    class ScrollingChild {
+        var recyclerView: RecyclerView? = null
+        var nestedScrollView: NestedScrollView? = null
+        fun clear() {
+            recyclerView = null
+            nestedScrollView = null
+        }
+    }
+
+}
