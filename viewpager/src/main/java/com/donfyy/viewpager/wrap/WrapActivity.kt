@@ -9,6 +9,7 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import com.donfyy.viewpager.R
 import java.util.*
 
 class WrapActivity : AppCompatActivity() {

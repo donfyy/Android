@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
+import com.donfyy.viewpager.R
 
 class MyPagerAdapter internal constructor(private val mImages: List<Int>, private val mContext: Context) : PagerAdapter() {
     override fun getPageTitle(position: Int): CharSequence? {
