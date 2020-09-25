@@ -142,3 +142,125 @@ DecorView与ViewRoot是一一对应的，WindowManager负责其对应关系。
 3. 如果需要重新绘制，则重新绘制（draw），否则跳到4
 
 ### measure
+
+## View 源码分析
+
+```java
+class View {
+    // 获取默认测量大小的算法
+    public static int getDefaultSize(int size, int measureSpec) {
+        int result = size;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+
+        switch (specMode) {
+        case MeasureSpec.UNSPECIFIED:
+            // 父View对子View没有约束，返回子View的测量大小
+            result = size;
+            break;
+        case MeasureSpec.AT_MOST:
+            // 父View给出了子View的大小上界，直接用上界
+        case MeasureSpec.EXACTLY:
+            // 父View已经计算出了子View的大小，直接用
+            result = specSize;
+            break;
+        }
+        return result;
+    }
+    // 该方法用来保存测量后的宽高，并考虑阴影等效果
+    protected final void setMeasuredDimension(int measuredWidth, int measuredHeight) {
+        boolean optical = isLayoutModeOptical(this);
+        if (optical != isLayoutModeOptical(mParent)) {
+            // 考虑要绘制的阴影效果
+            Insets insets = getOpticalInsets();
+            int opticalWidth  = insets.left + insets.right;
+            int opticalHeight = insets.top  + insets.bottom;
+
+            measuredWidth  += optical ? opticalWidth  : -opticalWidth;
+            measuredHeight += optical ? opticalHeight : -opticalHeight;
+        }
+        // 调用该方法来保存测量好的宽度和高度
+        setMeasuredDimensionRaw(measuredWidth, measuredHeight);
+    }
+
+    private void setMeasuredDimensionRaw(int measuredWidth, int measuredHeight) {
+        // 将测量宽度和高度保存到如下成员中
+        mMeasuredWidth = measuredWidth;
+        mMeasuredHeight = measuredHeight;
+        // 标记该View已经被测量过
+        mPrivateFlags |= PFLAG_MEASURED_DIMENSION_SET;
+    }
+}
+
+class ViewGroup {
+
+    // spec 是父View自身的测量规则
+    // padding 垂直或者水平方向的内边距
+    // childDimension 子View宽度或者高度的布局参数(layout_width/layout_height)
+    // 该方法根据父View的测量规则和子View的布局参数生成子View的测量规则 
+    public static int getChildMeasureSpec(int spec, int padding, int childDimension) {
+        int specMode = MeasureSpec.getMode(spec);
+        int specSize = MeasureSpec.getSize(spec);
+
+        // 父View里的可用空间大小
+        int size = Math.max(0, specSize - padding);
+
+        int resultSize = 0;
+        int resultMode = 0;
+
+        switch (specMode) {
+        // 父View的大小固定
+        case MeasureSpec.EXACTLY:
+            if (childDimension >= 0) {
+                // 子View在布局参数里指定了具体的数值，直接使用该值
+                resultSize = childDimension;
+                resultMode = MeasureSpec.EXACTLY;
+            } else if (childDimension == LayoutParams.MATCH_PARENT) {
+                // 子View想要和父View的大小一样，则使用父View的大小和测量规则
+                resultSize = size;
+                resultMode = MeasureSpec.EXACTLY;
+            } else if (childDimension == LayoutParams.WRAP_CONTENT) {
+                // 子View的大小取决于其内容的大小，则将父View的大小作为子View的大小上界
+                resultSize = size;
+                resultMode = MeasureSpec.AT_MOST;
+            }
+            break;
+
+        // 父View的大小还不知道，但是有一个上界
+        case MeasureSpec.AT_MOST:
+            if (childDimension >= 0) {
+                // 子View在布局参数里指定了具体的数值，直接使用该值
+                resultSize = childDimension;
+                resultMode = MeasureSpec.EXACTLY;
+            } else if (childDimension == LayoutParams.MATCH_PARENT) {
+                // 子View想要和父View的大小一样，则使用父View的大小和测量规则
+                resultSize = size;
+                resultMode = MeasureSpec.AT_MOST;
+            } else if (childDimension == LayoutParams.WRAP_CONTENT) {
+                // 子View的大小取决于其内容的大小，则将父View的大小上界作为子View的大小上界
+                resultSize = size;
+                resultMode = MeasureSpec.AT_MOST;
+            }
+            break;
+
+        // 父View的大小还不知道，想要多大就有多大
+        case MeasureSpec.UNSPECIFIED:
+            if (childDimension >= 0) {
+                // 子View在布局参数里指定了具体的数值，直接使用该值
+                resultSize = childDimension;
+                resultMode = MeasureSpec.EXACTLY;
+            } else if (childDimension == LayoutParams.MATCH_PARENT) {
+                // 子View想要和父View的大小一样，则使用父View的大小和测量规则
+                resultSize = View.sUseZeroUnspecifiedMeasureSpec ? 0 : size;
+                resultMode = MeasureSpec.UNSPECIFIED;
+            } else if (childDimension == LayoutParams.WRAP_CONTENT) {
+                // 子View的大小取决于其内容的大小，子View想要多大就有多大
+                resultSize = View.sUseZeroUnspecifiedMeasureSpec ? 0 : size;
+                resultMode = MeasureSpec.UNSPECIFIED;
+            }
+            break;
+        }
+        return MeasureSpec.makeMeasureSpec(resultSize, resultMode);
+    }
+}
+```

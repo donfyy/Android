@@ -70,23 +70,23 @@ public:
         cout << "~TestStruct() " << this << endl;
     }
 };
-    class Date1
-    {
-        int d, m, y;
+class Date1
+{
+    int d, m, y;
 
-    public:
-        Date1(int, int, int);
-        void add_year(int);
-    };
-    struct Date2
-    {
-    private:
-        int d, m, y;
+public:
+    Date1(int, int, int);
+    void add_year(int);
+};
+struct Date2
+{
+private:
+    int d, m, y;
 
-    public:
-        Date2(int, int, int);
-        void add_year();
-    };
+public:
+    Date2(int, int, int);
+    void add_year();
+};
 void example01_struct()
 {
     TestStruct t(1);
@@ -206,18 +206,47 @@ void example02()
     Test2 t7(t5);
     //对象的初始化和对象的赋值是两个不同的概念
 }
-
-void example02_02()
+struct Tests
 {
-    // 使用构造函数，编译器可以确保成员变量会被初始化
+    int i;
+    int vi[10];
     Test2 t1;
-    t1.init(2, 3);
-
-    Test2 tArr[3];
-    tArr[0].init(1, 2);
-    tArr[1].init(1, 2);
-    tArr[2].init(1, 2);
+    Test2 t2[10]; // 这里与Java不同，Java这么写表示t2是一个引用数组，c++这里是对象数组
+    friend ostream& operator <<(ostream &out, Tests& t);
+};
+ostream& operator <<(ostream &out, Tests&t) {
+    out << "i = " << t.i << endl;
+    cout << "[";
+    for (int i = 0; i < 10; i++) {
+        cout << t.vi[i] << ",";
+    }
+    cout << "]";
+    return out;
 }
+
+    struct X
+    {
+        const int a;
+        const int &r;
+    };
+
+    void example02_02()
+    {
+        // 使用构造函数，编译器可以确保成员变量会被初始化
+        Test2 t1;
+        t1.init(2, 3);
+
+        Test2 tArr[3];
+        tArr[0].init(1, 2);
+        tArr[1].init(1, 2);
+        tArr[2].init(1, 2);
+
+        cout << "----------------" << endl;
+        Tests tt;
+        cout << tt;
+        cout << "----------------" << endl;
+        // X x; // 错误：X无默认构造函数
+    }
 
 void example03()
 {
@@ -351,8 +380,9 @@ void example06()
 int main()
 {
     // example01();
-    example01_struct();
+    // example01_struct();
     // example02_01();
+    example02_02();
     // example03();
     // example04();
     // example05();
