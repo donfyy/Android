@@ -1,4 +1,4 @@
-package com.donfyy.wrap
+package com.donfyy.viewpager.wrap
 
 import android.view.View
 import androidx.viewpager.widget.ViewPager.PageTransformer

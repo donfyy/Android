@@ -1,4 +1,4 @@
-package com.donfyy.wrap;
+package com.donfyy.viewpager.wrap;
 
 import org.junit.Test;
 

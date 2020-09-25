@@ -5,7 +5,7 @@
     android:background="#aadcff"
     android:clipChildren="false">
 
-    <com.donfyy.wrap.MyViewPager
+    <com.donfyy.viewpager.wrap.MyViewPager
         android:id="@+id/view_Pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
 <!--            android:layout_marginTop="10dp"-->
 <!--            android:background="#0f0"-->
 <!--            android:layout_height="50dp"/>-->
-    </com.donfyy.wrap.MyViewPager>
+    </com.donfyy.viewpager.wrap.MyViewPager>
 
     <RadioGroup
         android:id="@+id/radio_group"
