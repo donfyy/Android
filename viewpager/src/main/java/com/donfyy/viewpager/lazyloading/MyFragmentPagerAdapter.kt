@@ -1,9 +1,14 @@
 package com.donfyy.viewpager.lazyloading
 
 import android.util.Log
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 
-class MyFragmentPagerAdapter(fm: androidx.fragment.app.FragmentManager?, private val fragmentList: List<androidx.fragment.app.Fragment>) : androidx.fragment.app.FragmentPagerAdapter(fm!!) {
-    override fun getItem(i: Int): androidx.fragment.app.Fragment {
+class MyFragmentPagerAdapter(fm: FragmentManager, private val fragmentList: List<Fragment>)
+    : FragmentStatePagerAdapter(fm, BEHAVIOR_SET_USER_VISIBLE_HINT) {
+    override fun getItem(i: Int): Fragment {
         Log.d(TAG, "getItem: $i")
         return fragmentList[i]
     }
