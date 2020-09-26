@@ -17,14 +17,6 @@ import com.donfyy.viewpager.R;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-
-/**
- * @author 享学课堂 Alvin
- * @package com.xiangxue.alvin.mylazyloadingfragment.lazyloading
- * @fileName FragmentExtendLazy1
- * @date on 2019/6/24
- * @qq 2464061231
- **/
 public class FragmentExtendLazy1 extends LazyFragment {
 
     private static final String TAG = "FragmentExtendLazy1";

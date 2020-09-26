@@ -23,3 +23,11 @@ class MyViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSe
     }
 }
 ```
+
+## 主页懒加载
+
+1.setUserVisibleHint会在生命周期方法开始之前调用，原因参见PagerAdapter源码
+2.需要考虑的情况
+    1.第一次显示ViewPager中的第一页
+    2.左右切换页
+    3.用户从第二个Activity中返回

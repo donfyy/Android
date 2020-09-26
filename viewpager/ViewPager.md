@@ -49,6 +49,7 @@ class ViewPager {
                 // 如果不是第一次摆放，就去填充页面。
                 populate();
             } else {
+                // 我们在onCreate方法里调用该方法后，会执行该分支
                 requestLayout();
             }
         }
