@@ -1,4 +1,4 @@
-package com.donfyy.viewpager.lazyloading.lazy3
+package com.donfyy.viewpager.lazyloading.lazy4
 
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -45,7 +45,6 @@ class Fragment2WithViewPager : BaseFragment() {
     }
 
     override fun onFragmentFirstVisible() {
-
     }
 
     init {

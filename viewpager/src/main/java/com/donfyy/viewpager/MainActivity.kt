@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.donfyy.viewpager.lazyloading.LazyMainActivity
 import com.donfyy.viewpager.lazyloading.lazy2.LazyMain2Activity
 import com.donfyy.viewpager.lazyloading.lazy3.LazyMain3Activity
+import com.donfyy.viewpager.lazyloading.lazy4.LazyMain4Activity
 import com.donfyy.viewpager.wrap.WrapActivity
 
 class MainActivity : AppCompatActivity() {
@@ -18,13 +19,20 @@ class MainActivity : AppCompatActivity() {
     fun onEnterMain1(view: View) {
         startActivity(Intent(this, LazyMainActivity::class.java))
     }
+
     fun onEnterMain2(view: View) {
         startActivity(Intent(this, LazyMain2Activity::class.java))
     }
+
     fun onEnterMain3(view: View) {
         startActivity(Intent(this, LazyMain3Activity::class.java))
     }
+
     fun onEnterWrapMain(view: View) {
         startActivity(Intent(this, WrapActivity::class.java))
+    }
+
+    fun onEnterMain4(view: View) {
+        startActivity(Intent(this, LazyMain4Activity::class.java))
     }
 }

@@ -17,7 +17,7 @@
         android:layout_marginRight="8dp"
         android:background="#378f9a"
         android:gravity="center"
-        android:text="five fragment"
+        android:text="fragment 5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

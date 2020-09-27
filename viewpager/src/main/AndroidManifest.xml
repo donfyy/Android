@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.donfyy.viewpager.wrap.WrapActivity"/>
+        <activity android:name="com.donfyy.viewpager.wrap.WrapActivity" />
+        <activity android:name=".lazyloading.lazy4.LazyMain4Activity" />
         <activity android:name="com.donfyy.viewpager.lazyloading.lazy3.LazyMain3Activity" />
         <activity android:name="com.donfyy.viewpager.lazyloading.lazy2.LazyMain2Activity" />
         <activity android:name="com.donfyy.viewpager.lazyloading.LazyMainActivity" />

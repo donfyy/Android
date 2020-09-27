@@ -1,10 +1,10 @@
-package com.donfyy.viewpager.lazyloading.lazy3
+package com.donfyy.viewpager.lazyloading.lazy4
 
 import com.donfyy.viewpager.R
 
-class Fragment4 : BaseFragment() {
+class Fragment3 : BaseFragment() {
     override val layoutRes: Int
-        get() = R.layout.fragment_4
+        get() = R.layout.fragment_3
 
     init {
         setFragmentDelegater(FragmentDelegater(this))
