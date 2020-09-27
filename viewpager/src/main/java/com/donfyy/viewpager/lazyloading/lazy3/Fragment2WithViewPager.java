@@ -18,7 +18,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 
-public class Fragment2WithViewPager extends LazyFragment2 {
+public class Fragment2WithViewPager extends LazyFragment3 {
 
     private static final String TAG = "Fragment2WithViewPager";
 

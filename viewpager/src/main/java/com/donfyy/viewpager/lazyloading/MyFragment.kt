@@ -60,7 +60,7 @@ class MyFragment : androidx.fragment.app.Fragment() {
 //        for (StackTraceElement stackTraceElement : element) {
 //            Log.d(TAG, tabIndex + " fragment "+ "setUserVisibleHint: " + stackTraceElement.toString());
 //        }
-        tabIndex = arguments!!.getInt(INTENT_INT_INDEX)
+        tabIndex = requireArguments().getInt(INTENT_INT_INDEX)
         Log.d(TAG, "$tabIndex fragment setUserVisibleHint: $isVisibleToUser")
     }
 

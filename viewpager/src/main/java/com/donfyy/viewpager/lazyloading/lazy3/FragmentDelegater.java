@@ -149,6 +149,6 @@ public class FragmentDelegater extends Fragment {
     }
 
     public void dumpLifeCycle(final String method) {
-        Log.i("Alvin", "name: " + mFragment.getClass().getSimpleName() + " -> " + method);
+        Log.i("donfyy", "name: " + mFragment.getClass().getSimpleName() + " -> " + method);
     }
 }

@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
-public class Fragment5 extends LazyFragment2 {
+public class Fragment5 extends LazyFragment3 {
 
     private Button mReplace;
     private Button mHideShow;

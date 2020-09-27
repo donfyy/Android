@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
-public class Fragment1 extends LazyFragment2 {
+public class Fragment1 extends LazyFragment3 {
     private static final String TAG = "Fragment1";
 
     public static Fragment newIntance() {

@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 
 
-public class Fragment2_vp_4 extends LazyFragment2 {
+public class Fragment2_vp_4 extends LazyFragment3 {
 
 
     public static Fragment newIntance() {
