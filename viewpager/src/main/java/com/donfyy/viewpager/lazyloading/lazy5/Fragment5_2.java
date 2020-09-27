@@ -6,15 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.donfyy.viewpager.R;
-import com.donfyy.viewpager.lazyloading.lazy3.FragmentDelegater;
-import com.donfyy.viewpager.lazyloading.lazy3.LazyFragment3;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
-public class Fragment5_2 extends LazyFragment3 {
+public class Fragment5_2 extends LazyFragment5 {
 
 
     public static Fragment newIntance() {

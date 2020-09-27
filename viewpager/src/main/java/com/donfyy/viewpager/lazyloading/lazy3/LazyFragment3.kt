@@ -147,7 +147,10 @@ abstract class LazyFragment3 : Fragment() {
         }
     }
 
-    protected abstract fun onFragmentFirstVisible()
+    protected open fun onFragmentFirstVisible() {
+        logD("onFragmentFirstVisible")
+    }
+
     protected fun onFragmentResume() {
         logD("onFragmentResume " + " 真正的resume,开始相关操作耗时")
     }
@@ -198,7 +201,6 @@ abstract class LazyFragment3 : Fragment() {
         super.onDestroyView()
         logD("onDestroyView")
         isViewCreated = false
-        mIsFirstVisible = false
     }
 
     override fun onDestroy() {

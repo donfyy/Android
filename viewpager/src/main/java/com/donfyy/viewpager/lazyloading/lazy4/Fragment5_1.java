@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
-public class Fragment5_1 extends LazyFragment3 {
+public class Fragment5_1 extends LazyFragment4 {
 
 
     public static Fragment newIntance() {

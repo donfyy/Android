@@ -151,7 +151,6 @@ abstract class LazyFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         isViewCreated = false
-        mIsFirstVisible = false
     }
 
     companion object {

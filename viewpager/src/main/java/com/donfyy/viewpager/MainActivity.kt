@@ -9,6 +9,7 @@ import com.donfyy.viewpager.lazyloading.lazy2.LazyMain2Activity
 import com.donfyy.viewpager.lazyloading.lazy3.LazyMain3Activity
 import com.donfyy.viewpager.lazyloading.lazy4.LazyMain4Activity
 import com.donfyy.viewpager.lazyloading.lazy5.LazyMain5Activity
+import com.donfyy.viewpager.lazyloading.lazy6.LazyMain6Activity
 import com.donfyy.viewpager.wrap.WrapActivity
 
 class MainActivity : AppCompatActivity() {
@@ -39,5 +40,9 @@ class MainActivity : AppCompatActivity() {
 
     fun onEnterMain5(view: View) {
         startActivity(Intent(this, LazyMain5Activity::class.java))
+    }
+
+    fun onEnterMain6(view: View) {
+        startActivity(Intent(this, LazyMain6Activity::class.java))
     }
 }

@@ -1,4 +1,4 @@
-package com.donfyy.viewpager.lazyloading.lazy5
+package com.donfyy.viewpager.lazyloading.lazy6
 
 import android.content.Context
 import android.os.Bundle
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.LogUtils
 
-abstract class LazyFragment5 : Fragment() {
+abstract class LazyFragment6 : Fragment() {
     // fragment 生命周期：
     // onAttach -> onCreate -> onCreatedView -> onActivityCreated -> onStart -> onResume -> onPause -> onStop -> onDestroyView -> onDestroy -> onDetach
     // 对于 ViewPager + Fragment 的实现我们需要关注的几个生命周期有：
@@ -51,11 +51,6 @@ abstract class LazyFragment5 : Fragment() {
      */
     private fun dispatchUserVisibleHint(isVisible: Boolean) {
         logD("dispatchUserVisibleHint: $isVisible")
-        // 事实上作为父 Fragment 的 BottomTabFragment2 并没有分发可见事件，
-        // 他通过 getUserVisibleHint() 得到的结果为 false，首先我想到的
-        // 是能在负责分发事件的方法中判断一下当前父 fragment 是否可见，
-        // 如果父 fragment 不可见我们就不进行可见事件的分发
-
         //为了代码严谨
         if (isSupportVisible == isVisible) {
             return
@@ -94,6 +89,12 @@ abstract class LazyFragment5 : Fragment() {
         dispatchUserVisibleHint(true)
     }
 
+    /**
+     * 只有当当前页面由可见状态转变到不可见状态时才需要调用 dispatchUserVisibleHint
+     * currentVisibleState && getUserVisibleHint() 能够限定是当前可见的 Fragment
+     * 当前 Fragment 包含子 Fragment 的时候 dispatchUserVisibleHint 内部本身就会通知子 Fragment 不可见
+     * 子 fragment 走到这里的时候自身又会调用一遍
+     */
     override fun onPause() {
         logD("onPause: ")
         dispatchUserVisibleHint(false)
@@ -119,7 +120,7 @@ abstract class LazyFragment5 : Fragment() {
         super.onDetach()
     }
 
-    private fun logD(infor: String) {
+    fun logD(infor: String) {
         mFragmentDelegater?.dumpLifeCycle(infor) ?: LogUtils.d(infor)
     }
 }

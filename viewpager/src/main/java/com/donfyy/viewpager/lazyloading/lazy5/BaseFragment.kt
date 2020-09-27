@@ -18,6 +18,7 @@ abstract class BaseFragment : LazyFragment5() {
         get() = R.layout.fragment_1
 
     override fun onFragmentFirstVisible() {
+        super.onFragmentFirstVisible()
         Handler().postDelayed({
             content.visibility = View.VISIBLE
             loading.visibility = View.GONE

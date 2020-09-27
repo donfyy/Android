@@ -1,4 +1,4 @@
-package com.donfyy.viewpager.lazyloading.lazy5;
+package com.donfyy.viewpager.lazyloading.lazy6;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
-public class Fragment5_1 extends LazyFragment5 {
+public class Fragment5_1 extends LazyFragment6 {
 
 
     public static Fragment newIntance() {

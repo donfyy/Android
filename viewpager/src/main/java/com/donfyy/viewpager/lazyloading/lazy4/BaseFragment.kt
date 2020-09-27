@@ -4,7 +4,7 @@ import android.os.Handler
 import android.view.View
 import com.donfyy.viewpager.R
 
-abstract class BaseFragment : LazyFragment3() {
+abstract class BaseFragment : LazyFragment4() {
     lateinit var loading: View
     lateinit var content: View
     override fun initView(view: View?) {

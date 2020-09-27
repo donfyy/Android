@@ -1,4 +1,4 @@
-package com.donfyy.viewpager.lazyloading.lazy5;
+package com.donfyy.viewpager.lazyloading.lazy6;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,24 +6,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.donfyy.viewpager.R;
+import com.donfyy.viewpager.lazyloading.lazy3.FragmentDelegater;
+import com.donfyy.viewpager.lazyloading.lazy3.LazyFragment3;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
-public class Fragment5_1 extends LazyFragment5 {
+public class Fragment5_2 extends LazyFragment3 {
 
 
     public static Fragment newIntance() {
-        Fragment5_1 fragment = new Fragment5_1();
+        Fragment5_2 fragment = new Fragment5_2();
         fragment.setFragmentDelegater(new FragmentDelegater(fragment));
         return fragment;
     }
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_5_1;
+        return R.layout.fragment_5_2;
     }
 
     @Override
@@ -51,4 +53,6 @@ public class Fragment5_1 extends LazyFragment5 {
     public void onPause() {
         super.onPause();
     }
+
+
 }

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.LogUtils
 
-abstract class LazyFragment3 : Fragment() {
+abstract class LazyFragment4 : Fragment() {
     // fragment 生命周期：
     // onAttach -> onCreate -> onCreatedView -> onActivityCreated -> onStart -> onResume -> onPause -> onStop -> onDestroyView -> onDestroy -> onDetach
     // 对于 ViewPager + Fragment 的实现我们需要关注的几个生命周期有：
@@ -111,7 +111,7 @@ abstract class LazyFragment3 : Fragment() {
     private val isParentInvisible: Boolean
         get() {
             val parentFragment = parentFragment
-            if (parentFragment is LazyFragment3) {
+            if (parentFragment is LazyFragment4) {
                 return !parentFragment.isSupportVisible
             }
             return false
@@ -121,7 +121,7 @@ abstract class LazyFragment3 : Fragment() {
         val fragmentManager = childFragmentManager
         val fragments = fragmentManager.fragments
         for (fragment in fragments) {
-            if (fragment is LazyFragment3 &&
+            if (fragment is LazyFragment4 &&
                     !fragment.isHidden() &&
                     fragment.getUserVisibleHint()) {
                 fragment.dispatchUserVisibleHint(visible)
@@ -147,7 +147,7 @@ abstract class LazyFragment3 : Fragment() {
         }
     }
 
-    protected fun onFragmentFirstVisible() {
+    protected open fun onFragmentFirstVisible() {
         logD("onFragmentFirstVisible")
     }
 
@@ -201,7 +201,6 @@ abstract class LazyFragment3 : Fragment() {
         super.onDestroyView()
         logD("onDestroyView")
         isViewCreated = false
-        mIsFirstVisible = false
     }
 
     override fun onDestroy() {
