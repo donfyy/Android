@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.LogUtils
 
 abstract class LazyFragment3 : Fragment() {
     // fragment 生命周期：
@@ -209,12 +210,6 @@ abstract class LazyFragment3 : Fragment() {
     }
 
     private fun logD(infor: String) {
-        if (mFragmentDelegater != null) {
-            mFragmentDelegater!!.dumpLifeCycle(infor)
-        }
-    }
-
-    companion object {
-        private const val TAG = "LazyFragment3"
+        mFragmentDelegater?.dumpLifeCycle(infor) ?: LogUtils.d(infor)
     }
 }

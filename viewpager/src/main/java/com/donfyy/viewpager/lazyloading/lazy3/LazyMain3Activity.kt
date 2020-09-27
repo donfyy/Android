@@ -19,11 +19,11 @@ class LazyMain3Activity : AppCompatActivity() {
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         fragmentsList = ArrayList()
-        fragmentsList.add(Fragment1.newIntance())
-        fragmentsList.add(Fragment2WithViewPager.newIntance())
-        fragmentsList.add(Fragment3.newIntance())
-        fragmentsList.add(Fragment4.newIntance())
-        fragmentsList.add(Fragment5.newIntance())
+        fragmentsList.add(Fragment1())
+        fragmentsList.add(Fragment2WithViewPager())
+        fragmentsList.add(Fragment3())
+        fragmentsList.add(Fragment4())
+        fragmentsList.add(Fragment5())
         viewPager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrolled(i: Int, v: Float, i1: Int) {}
             override fun onPageSelected(i: Int) {
