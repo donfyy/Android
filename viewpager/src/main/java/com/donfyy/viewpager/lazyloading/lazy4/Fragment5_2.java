@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.donfyy.viewpager.R;
-import com.donfyy.viewpager.lazyloading.lazy3.FragmentDelegater;
-import com.donfyy.viewpager.lazyloading.lazy3.LazyFragment3;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,10 +31,6 @@ public class Fragment5_2 extends LazyFragment3 {
 
     }
 
-    @Override
-    protected void onFragmentFirstVisible() {
-
-    }
 
     @Nullable
     @Override

@@ -1,9 +1,8 @@
-package com.donfyy.viewpager.lazyloading.lazy4
+package com.donfyy.viewpager.lazyloading.lazy5
 
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.donfyy.viewpager.R
 import java.util.*
@@ -22,26 +21,23 @@ class Fragment2WithViewPager : BaseFragment() {
         view?:return
         viewPager = view.findViewById(R.id.content)
         fragmentsList = ArrayList()
-        fragmentsList!!.add(Fragment2_vp_1())
-        fragmentsList!!.add(Fragment2_vp_2())
-        fragmentsList!!.add(Fragment2_vp_3())
-        fragmentsList!!.add(Fragment2_vp_4())
-        /**
-         * 实例化一个PagerAdapter
-         * 必须重写的两个方法
-         * getCount
-         * getItem
-         */
-        val pagerAdapter: PagerAdapter = object : FragmentPagerAdapter(childFragmentManager) {
+        fragmentsList.add(Fragment2_vp_1())
+        fragmentsList.add(Fragment2_vp_2())
+        fragmentsList.add(Fragment2_vp_3())
+        fragmentsList.add(Fragment2_vp_4())
+        val pagerAdapter = object : FragmentPagerAdapter(childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             override fun getItem(i: Int): Fragment {
-                return fragmentsList!![i]
+                return fragmentsList[i]
             }
 
             override fun getCount(): Int {
-                return fragmentsList!!.size
+                return fragmentsList.size
             }
         }
-        viewPager.setAdapter(pagerAdapter)
+        viewPager.adapter = pagerAdapter
+    }
+
+    override fun onFragmentFirstVisible() {
     }
 
     init {

@@ -147,7 +147,10 @@ abstract class LazyFragment3 : Fragment() {
         }
     }
 
-    protected abstract fun onFragmentFirstVisible()
+    protected fun onFragmentFirstVisible() {
+        logD("onFragmentFirstVisible")
+    }
+
     protected fun onFragmentResume() {
         logD("onFragmentResume " + " 真正的resume,开始相关操作耗时")
     }
@@ -209,7 +212,7 @@ abstract class LazyFragment3 : Fragment() {
         super.onDetach()
     }
 
-    private fun logD(infor: String) {
+    protected fun logD(infor: String) {
         mFragmentDelegater?.dumpLifeCycle(infor) ?: LogUtils.d(infor)
     }
 }

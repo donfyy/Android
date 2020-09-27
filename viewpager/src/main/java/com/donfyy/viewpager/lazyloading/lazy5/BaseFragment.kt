@@ -1,10 +1,10 @@
-package com.donfyy.viewpager.lazyloading.lazy4
+package com.donfyy.viewpager.lazyloading.lazy5
 
 import android.os.Handler
 import android.view.View
 import com.donfyy.viewpager.R
 
-abstract class BaseFragment : LazyFragment3() {
+abstract class BaseFragment : LazyFragment5() {
     lateinit var loading: View
     lateinit var content: View
     override fun initView(view: View?) {
@@ -18,10 +18,9 @@ abstract class BaseFragment : LazyFragment3() {
         get() = R.layout.fragment_1
 
     override fun onFragmentFirstVisible() {
-        super.onFragmentFirstVisible()
         Handler().postDelayed({
             content.visibility = View.VISIBLE
             loading.visibility = View.GONE
-        }, 500)
+        }, 300)
     }
 }
