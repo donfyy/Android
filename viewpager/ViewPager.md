@@ -1,5 +1,13 @@
 # ViewPager
 
+ViewPager的核心部分，是计算Adapter中每一页的位置。
+这个位置信息是记录在 ``` ItemInfo.offset ``` 中的。
+但是需要注意的是这个offset是以ViewPager的宽度为单位的。
+并且这个offset是坐标轴中的一个点，而不是坐标轴中的一段距离。
+
+ViewPager中的每一页按照在Adapter中的位置，从左到右摆放，
+滑动是通过scrollTo完成的。
+
 ## 源码分析
 androidx.viewpager:viewpager:1.0.0
 ```java
@@ -365,6 +373,16 @@ class ViewPager {
         return ii;
     }
 
+    // 用来保存每一页相关的信息
+    static class ItemInfo {
+        Object object;
+        int position; // 该页在Adapter中的位置
+        boolean scrolling; // 是否正在滑动
+        float widthFactor; // 该页的宽度与ViewPager的宽度之比
+        float offset; // 该页左边界在ViewPager x轴上的位置，以ViewPager宽度为单位
+        // 这个x轴，暂时就叫offset轴吧
+    }
+
     private void calculatePageOffsets(ItemInfo curItem, int curIndex, ItemInfo oldCurInfo) {
         final int N = mAdapter.getCount();
         final int width = getClientWidth();
@@ -721,10 +739,10 @@ class ViewPager {
         final int widthWithMargin = width + mPageMargin;
         final float marginOffset = (float) mPageMargin / width;
         final int currentPage = ii.position;
-        // 页面偏移量
+        // 当前页的滑动的距离与ViewPager中一页宽度的百分比
         final float pageOffset = (((float) xpos / width) - ii.offset)
                 / (ii.widthFactor + marginOffset);
-        // 页面偏移像素
+        // 当前页的滑动距离
         final int offsetPixels = (int) (pageOffset * widthWithMargin);
         mCalledSuper = false;
         onPageScrolled(currentPage, pageOffset, offsetPixels);
@@ -748,7 +766,7 @@ class ViewPager {
                 final LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
                 if (lp.isDecor) continue;
-                // 求出child的偏移，transformPos是负值表示向左滑动，正值表示向右滑动
+                // 求出child在offset坐标轴上的相对距离，transformPos是负值表示向左滑动，正值表示向右滑动
                 final float transformPos = (float) (child.getLeft() - scrollX) / getClientWidth();
                 mPageTransformer.transformPage(child, transformPos);
             }

@@ -1,3 +1,4 @@
+include ':chart'
 include ':viewpager'
 include ':skin2'
 include ':util'
