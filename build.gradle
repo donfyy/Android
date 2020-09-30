@@ -7,7 +7,6 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.1'
@@ -22,7 +21,6 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
     }
 }
 
@@ -33,7 +31,8 @@ ext {
     compileSdkVersion = 29
     buildToolsVersion = "29.0.3"
     targetSdkVersion = 28
-    minSdkVersion = 23
+//    minSdkVersion = 23
+    minSdkVersion = 17
     navVersion = "2.3.0"
     versionCode = 1
     versionName = "1.0"
@@ -68,5 +67,7 @@ ext {
             rxJava:'io.reactivex.rxjava3:rxjava:3.0.5',
             rxAndroid:'io.reactivex.rxjava3:rxandroid:3.0.0',
             utilcodex:'com.blankj:utilcodex:1.29.0',
+            MPAndroidChart:'com.github.PhilJay:MPAndroidChart:v3.1.0',
+            guava:'com.google.guava:guava:24.1-jre',
     ]
 }
