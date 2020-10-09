@@ -264,3 +264,65 @@ class ViewGroup {
     }
 }
 ```
+
+### onSizeChanged调用流程
+
+只有当前View的大小发生改变时，调用onSizeChanged方法
+
+```java
+class View {
+
+    // 摆放当前的View
+    public void layout(int l, int t, int r, int b) {
+        // ...
+        int oldL = mLeft;
+        int oldT = mTop;
+        int oldB = mBottom;
+        int oldR = mRight;
+        // 保存位置
+        boolean changed = isLayoutModeOptical(mParent) ?
+                setOpticalFrame(l, t, r, b) : setFrame(l, t, r, b);
+        if (changed || (mPrivateFlags & PFLAG_LAYOUT_REQUIRED) == PFLAG_LAYOUT_REQUIRED) {
+            // 通知摆放子View
+            onLayout(changed, l, t, r, b);
+            // ...
+        }
+        // ...
+    }
+
+    // 保存当前View的大小和位置
+    protected boolean setFrame(int left, int top, int right, int bottom) {
+        boolean changed = false;
+        if (mLeft != left || mRight != right || mTop != top || mBottom != bottom) {
+            // 只有位置发生了改变才会保存
+            changed = true;
+            // ...
+            int oldWidth = mRight - mLeft;
+            int oldHeight = mBottom - mTop;
+            int newWidth = right - left;
+            int newHeight = bottom - top;
+            boolean sizeChanged = (newWidth != oldWidth) || (newHeight != oldHeight);
+            // ...
+            // 保存位置
+            mLeft = left;
+            mTop = top;
+            mRight = right;
+            mBottom = bottom;
+            mRenderNode.setLeftTopRightBottom(mLeft, mTop, mRight, mBottom);
+            // ...
+            if (sizeChanged) {
+                // 如果宽高发生改变，发出通知
+                sizeChange(newWidth, newHeight, oldWidth, oldHeight);
+            }
+            // ...
+        }
+        return changed;
+    }
+
+    private void sizeChange(int newWidth, int newHeight, int oldWidth, int oldHeight) {
+        // 通知大小发生改变
+        onSizeChanged(newWidth, newHeight, oldWidth, oldHeight);
+        // ... 
+    }
+}
+```

@@ -1,3 +1,5 @@
+include ':bitmap'
+include ':shrink'
 include ':keepalive'
 include ':chart'
 include ':viewpager'
