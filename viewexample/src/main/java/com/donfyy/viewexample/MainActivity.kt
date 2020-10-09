@@ -3,12 +3,11 @@ package com.donfyy.viewexample
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.Window
-import androidx.core.app.ActivityManagerCompat
+import androidx.appcompat.app.AppCompatActivity
+import com.donfyy.viewexample.canvas.CanvasActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,5 +53,9 @@ class MainActivity : AppCompatActivity() {
 
     fun onShowLottieExample(view: View) {
         showActivity(LottieActivity::class.java)
+    }
+
+    fun onShowCanvas(view: View) {
+        showActivity(CanvasActivity::class.java)
     }
 }

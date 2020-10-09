@@ -15,6 +15,7 @@ object Utils {
                 Resources.getSystem().displayMetrics).toInt()
     }
 
+    @JvmStatic
     fun getScreenHeight(context: Context): Int {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val dm = DisplayMetrics()

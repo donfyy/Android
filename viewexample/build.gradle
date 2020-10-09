@@ -35,6 +35,7 @@ dependencies {
     implementation rootProject.ext.dependencies.material
     implementation rootProject.ext.dependencies.lifecycleExtensions
     implementation rootProject.ext.dependencies.constraintlayout
+    implementation project(":util")
     implementation rootProject.ext.dependencies.lottie
     testImplementation rootProject.ext.dependencies.junit
     androidTestImplementation rootProject.ext.dependencies.testRunner

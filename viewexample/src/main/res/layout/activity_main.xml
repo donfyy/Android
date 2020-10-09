@@ -13,6 +13,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onShowCanvas"
+            android:text="画布"
+            android:textColor="#000" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="onShowVectorDrawableExample"
             android:text="Vector Drawable"
             android:textColor="#000" />
