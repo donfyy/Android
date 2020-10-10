@@ -31,4 +31,8 @@ class CanvasActivity : AppCompatActivity() {
     fun onShowTransformation(view: View) {
         showActivity(TransformationActivity::class.java)
     }
+
+    fun onShowMatrix(view: View) {
+        showActivity(MatrixActivity::class.java)
+    }
 }

@@ -31,5 +31,11 @@
         android:text="Transformation"
         android:onClick="onShowTransformation"
         android:layout_height="wrap_content"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:text="Matrix"
+        android:onClick="onShowMatrix"
+        android:layout_height="wrap_content"/>
 </com.donfyy.viewexample.view.FlowLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,9 +2,7 @@ package com.donfyy.bitmap.photoview
 
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
@@ -15,12 +13,21 @@ import android.view.View
 import android.widget.OverScroller
 import com.blankj.utilcode.util.LogUtils
 import com.donfyy.bitmap.R
+import com.donfyy.util.Calculator
 import com.donfyy.util.Utils
 
 /**
+ * 整个PhotoView应该实现的功能
  * 1.双击放大与缩小
- * 2.放大与缩小
- * 3.平移
+ * 2.使用手指放大与缩小
+ * 3.使用手指平移
+ * 基于Canvas的scale方法与translate方法进行缩放和平移操作，
+ * 基于drawBitmap方法绘制Bitmap。通过GestureDetector来监听双击和滑动事件。
+ * 通过ScaleGestureDetector来监听缩放事件。
+ * 在缩放时需要考虑滑动距离，在滑动时考虑缩放。
+ * 使用Canvas绘制的Bitmap会应用Canvas的Matrix。
+ * 所以此处Bitmap绘制的位置并未发生改变。
+ * 以画布的中心点放大与缩小。
  */
 class PhotoView @JvmOverloads constructor(
         context: Context,
@@ -35,8 +42,10 @@ class PhotoView @JvmOverloads constructor(
     private var maxScale = 0f
     private var currScale = 0f
     private val OVER_SCALE_FACTOR = 1.5f
-    private var gestureDetector: GestureDetector? = null
-    private var isEnlarge = false
+    private val DEFAULT_DURATION = 200L
+    private var gestureDetector: GestureDetector
+    private val boarder = Rect()
+    private val boarderPaint = Paint()
     private val scaleAnimator: ObjectAnimator by lazy(LazyThreadSafetyMode.NONE) {
         ObjectAnimator.ofFloat(this, "currentScale", 0f)
     }
@@ -54,9 +63,16 @@ class PhotoView @JvmOverloads constructor(
             // 当前放大比例为 small 时，scaleFaction = 0，不偏移
             canvas.translate(offsetX * scaleFaction, offsetY * scaleFaction);
             canvas.scale(currScale, currScale, width / 2f, height / 2f)
-//        LogUtils.d("density = " + canvas.getDensity());
+//            canvas.drawRect(boarder, boarderPaint)
             canvas.drawBitmap(it, originalLeft, originalTop, paint)
         }
+    }
+
+    private fun isHorizontal(): Boolean {
+        bitmap?.let {
+            return it.width.toFloat() / it.height > width.toFloat() / height
+        }
+        return false
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -65,7 +81,7 @@ class PhotoView @JvmOverloads constructor(
         bitmap?.let {
             originalLeft = (w - it.width) / 2f
             originalTop = (h - it.height) / 2f
-            if (it.width.toFloat() / it.height > w.toFloat() / h) {
+            if (isHorizontal()) {
                 // 宽全屏
                 minScale = w.toFloat() / it.width
                 maxScale = h.toFloat() / it.height * OVER_SCALE_FACTOR
@@ -74,20 +90,24 @@ class PhotoView @JvmOverloads constructor(
                 minScale = h.toFloat() / it.height
                 maxScale = w.toFloat() / it.width * OVER_SCALE_FACTOR
             }
+            boarder.set((w - it.width) / 2,
+                    (h - it.height) / 2,
+                    (w + it.width) / 2,
+                    (h + it.height) / 2)
             currScale = minScale
         }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-            if (!overScroller.isOverScrolled && !overScroller.isFinished) {
+            if (!overScroller.isOverScrolled) {
                 overScroller.abortAnimation()
             }
         }
         // 响应事件以双指缩放优先
         var result = scaleGestureDetector.onTouchEvent(event)
         if (!scaleGestureDetector.isInProgress) {
-            result = gestureDetector!!.onTouchEvent(event)
+            result = gestureDetector.onTouchEvent(event)
         }
         return result
     }
@@ -114,11 +134,13 @@ class PhotoView @JvmOverloads constructor(
          */
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
 //            if (isEnlarge) {
-            offsetX -= distanceX
-            offsetY -= distanceY
-            fixOffsets()
-            invalidate()
-            //            }
+            if (currScale > minScale && !scaleGestureDetector.isInProgress) {
+                offsetX -= distanceX / (currScale - minScale) * (maxScale - minScale)
+                offsetY -= distanceY / (currScale - minScale) * (maxScale - minScale)
+                fixOffsets(currScale)
+                invalidate()
+            }
+//                        }
             return super.onScroll(e1, e2, distanceX, distanceY)
         }
 
@@ -130,13 +152,16 @@ class PhotoView @JvmOverloads constructor(
          * @return
          */
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-            if (isEnlarge) {
-                overScroller.fling(offsetX.toInt(), offsetY.toInt(), velocityX.toInt(), velocityY.toInt(),
-                        (-(bitmap!!.width * maxScale - width)).toInt() / 2,
-                        (bitmap!!.width * maxScale - width).toInt() / 2,
-                        (-(bitmap!!.height * maxScale - height)).toInt() / 2,
-                        (bitmap!!.height * maxScale - height).toInt() / 2,
-                        300, 300)
+            if (currScale > minScale) {
+                bitmap?.let {
+                    val dw = maxOf(0f, (it.width * currScale - width) / 2f).toInt()
+                    val dh = maxOf(0f, (it.height * currScale - height) / 2f).toInt()
+                    val x = (offsetX * (currScale - minScale) / (maxScale - minScale)).toInt()
+                    val y = (offsetY * (currScale - minScale) / (maxScale - minScale)).toInt()
+                    overScroller.fling(
+                            x, y, velocityX.toInt(), velocityY.toInt(), -dw, dw, -dh, dh, 300, 300
+                    )
+                }
                 postOnAnimation(FlingRunner())
             }
             return super.onFling(e1, e2, velocityX, velocityY)
@@ -154,16 +179,24 @@ class PhotoView @JvmOverloads constructor(
 
         // 双击的第二次点击down时触发。双击的触发时间 -- 40ms -- 300ms
         override fun onDoubleTap(e: MotionEvent): Boolean {
-            isEnlarge = !isEnlarge
-            if (isEnlarge) {
-//                offsetX = e.x - width / 2f -
-//                        (e.x - width / 2f) * bigScale / smallScale
-//                offsetY = e.y - height / 2f -
-//                        (e.y - height / 2f) * bigScale / smallScale
-                fixOffsets()
-                scaleAnimation.start()
+            if (currScale == minScale) {
+                val distanceX = e.x - width / 2f
+                val distanceY = e.y - height / 2f
+                offsetX = distanceX - Calculator.getScaledDistance(distanceX, minScale, maxScale)
+                offsetY = distanceY - Calculator.getScaledDistance(distanceY, minScale, maxScale)
+                fixOffsets(maxScale)
+                scaleAnimator.apply {
+                    setFloatValues(minScale, maxScale)
+                    duration = DEFAULT_DURATION
+                    start()
+                }
             } else {
-                scaleAnimation.reverse()
+                scaleAnimator.apply {
+                    setFloatValues(currScale, minScale)
+                    duration = DEFAULT_DURATION
+//                    duration = (DEFAULT_DURATION * (currScale - minScale) / (maxScale - minScale)).toLong()
+                    start()
+                }
             }
             return super.onDoubleTap(e)
         }
@@ -185,8 +218,8 @@ class PhotoView @JvmOverloads constructor(
     internal inner class FlingRunner : Runnable {
         override fun run() {
             if (overScroller.computeScrollOffset()) {
-                offsetX = overScroller.currX.toFloat()
-                offsetY = overScroller.currY.toFloat()
+                offsetX = overScroller.currX * (maxScale - minScale) / (currScale - minScale)
+                offsetY = overScroller.currY * (maxScale - minScale) / (currScale - minScale)
                 invalidate()
                 // 下一帧动画的时候执行
                 postOnAnimation(this)
@@ -194,21 +227,37 @@ class PhotoView @JvmOverloads constructor(
         }
     }
 
-    private fun fixOffsets() {
-//        offsetX = Math.min(offsetX, (bitmap.getWidth() * currentScale - getWidth()) / 2);
-//        offsetX = Math.max(offsetX, -(bitmap.getWidth() * currentScale - getWidth()) / 2);
-//        offsetY = Math.min(offsetY, (bitmap.getHeight() * currentScale - getHeight()) / 2);
-//        offsetY = Math.max(offsetY, -(bitmap.getHeight() * currentScale - getHeight()) / 2);
-        offsetX = Math.min(offsetX, (bitmap!!.width * maxScale - width) / 2)
-        offsetX = Math.max(offsetX, -(bitmap!!.width * maxScale - width) / 2)
-        offsetY = Math.min(offsetY, (bitmap!!.height * maxScale - height) / 2)
-        offsetY = Math.max(offsetY, -(bitmap!!.height * maxScale - height) / 2)
-    }
-
-    private val scaleAnimation: ObjectAnimator
-        get() {
-            return scaleAnimator.apply { setFloatValues(minScale, maxScale) }
+    // offset是在缩放系数为上界时的滑动距离
+    private fun fixOffsets(currScale: Float) {
+        bitmap?.let {
+            val deltaWidth = it.width * currScale - width
+            val maxDeltaWidth = it.width * maxScale - width
+            offsetX = if (deltaWidth > 0) {
+                if (isHorizontal()) {
+                    // 宽全屏，滑动距离的上下界是固定的
+                    maxOf(minOf(offsetX, maxDeltaWidth / 2f), -maxDeltaWidth / 2f)
+                } else {
+                    // 高全屏下，滑动距离的上下界需要随着缩放系数的变化而变化
+                    maxOf(minOf(offsetX, maxDeltaWidth / 2f), -maxDeltaWidth / 2f)
+                }
+            } else {
+                0f
+            }
+            val deltaHeight = it.height * currScale - height
+            val maxDeltaHeight = it.height * maxScale - height
+            offsetY = if (deltaHeight > 0) {
+                if (isHorizontal()) {
+                    // 宽全屏下，垂直方向上的滑动距离上下限随着缩放系数的变化而变化
+                    maxOf(minOf(offsetY, deltaHeight / 2f), -deltaHeight / 2f)
+                } else {
+                    // 高全屏下，垂直方向上的滑动距离上下限是固定的
+                    maxOf(minOf(offsetY, maxDeltaHeight / 2f), -maxDeltaHeight / 2f)
+                }
+            } else {
+                0f
+            }
         }
+    }
 
     fun getCurrentScale(): Float {
         return currScale
@@ -221,23 +270,29 @@ class PhotoView @JvmOverloads constructor(
 
     internal inner class PhotoScaleGestureListener : OnScaleGestureListener {
         var initScale = 0f
+
+        // 返回值为false表示不更新求得的直径
         override fun onScale(detector: ScaleGestureDetector): Boolean {
-            if (currScale > minScale && !isEnlarge
-                    || currScale == minScale && !isEnlarge) {
-                isEnlarge = !isEnlarge
-            }
             // 缩放因子
-            currScale = initScale * detector.scaleFactor
-            invalidate()
+            val scale = initScale * detector.scaleFactor
+            if (scale in minScale..maxScale) {
+                currScale = initScale * detector.scaleFactor
+                fixOffsets(currScale)
+                invalidate()
+            }
+
             return false
         }
 
         override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
             initScale = currScale
+            LogUtils.d("currScale = $currScale  offsetX = $offsetX  offsetY = $offsetY")
             return true
         }
 
-        override fun onScaleEnd(detector: ScaleGestureDetector) {}
+        override fun onScaleEnd(detector: ScaleGestureDetector) {
+            LogUtils.d("...")
+        }
     }
 
     companion object {
@@ -250,5 +305,8 @@ class PhotoView @JvmOverloads constructor(
         gestureDetector = GestureDetector(context, PhotoGestureDetector())
         overScroller = OverScroller(context)
         scaleGestureDetector = ScaleGestureDetector(context, PhotoScaleGestureListener())
+        boarderPaint.color = Color.RED
+        boarderPaint.style = Paint.Style.STROKE
+        boarderPaint.strokeWidth = Utils.dp2px(1).toFloat()
     }
 }

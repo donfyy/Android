@@ -110,6 +110,204 @@ class BitmapFactory {
 }
 ```
 
+## ScaleGestureDetector 分析
+
+监听缩放的核心原理在于以多个手指的中心点画圆，然后求出该圆的直径。具体算法如下：
+
+1.得到当前按下的手指的数量
+
+2.分别累加每个手指的xy轴的坐标值，除以手指的数量得到圆点坐标
+
+3.分别累加每个手指的xy轴距离圆点的距离，除以手指的数量得到xy轴方向上平均距离
+
+4.将xy轴方向上的平均距离分别乘以2，然后求出斜边的长度即为圆的直径。
+
+5.此次手势计算出的直径与上次计算出的直径之比，即为缩放系数。
+
+
+```java
+class ScaleGestureDetector {
+    public boolean onTouchEvent(MotionEvent event) {
+        if (mInputEventConsistencyVerifier != null) {
+            mInputEventConsistencyVerifier.onTouchEvent(event, 0);
+        }
+
+        mCurrTime = event.getEventTime();
+
+        final int action = event.getActionMasked();
+
+        // Forward the event to check for double tap gesture
+        if (mQuickScaleEnabled) {
+            mGestureDetector.onTouchEvent(event);
+        }
+
+        // 获取到当前手指数量
+        final int count = event.getPointerCount();
+        // 是否是触控笔按下
+        final boolean isStylusButtonDown =
+                (event.getButtonState() & MotionEvent.BUTTON_STYLUS_PRIMARY) != 0;
+
+        final boolean anchoredScaleCancelled =
+                mAnchoredScaleMode == ANCHORED_SCALE_MODE_STYLUS && !isStylusButtonDown;
+        // 手势是否完成了
+        final boolean streamComplete = action == MotionEvent.ACTION_UP ||
+                action == MotionEvent.ACTION_CANCEL || anchoredScaleCancelled;
+
+        if (action == MotionEvent.ACTION_DOWN || streamComplete) {
+            // Reset any scale in progress with the listener.
+            // If it's an ACTION_DOWN we're beginning a new event stream.
+            // This means the app probably didn't give us all the events. Shame on it.
+            // 重置状态
+            if (mInProgress) {
+                mListener.onScaleEnd(this);
+                mInProgress = false;
+                mInitialSpan = 0;
+                mAnchoredScaleMode = ANCHORED_SCALE_MODE_NONE;
+            } else if (inAnchoredScaleMode() && streamComplete) {
+                mInProgress = false;
+                mInitialSpan = 0;
+                mAnchoredScaleMode = ANCHORED_SCALE_MODE_NONE;
+            }
+
+            if (streamComplete) {
+                return true;
+            }
+        }
+
+        if (!mInProgress && mStylusScaleEnabled && !inAnchoredScaleMode()
+                && !streamComplete && isStylusButtonDown) {
+            // Start of a button scale gesture
+            // 没有缩放，启用触控笔缩放，不在anchoredScale模式下，触摸手势没有结束，触控笔按下
+            mAnchoredScaleStartX = event.getX();
+            mAnchoredScaleStartY = event.getY();
+            mAnchoredScaleMode = ANCHORED_SCALE_MODE_STYLUS;
+            mInitialSpan = 0;
+        }
+
+        final boolean configChanged = action == MotionEvent.ACTION_DOWN ||
+                action == MotionEvent.ACTION_POINTER_UP ||
+                action == MotionEvent.ACTION_POINTER_DOWN || anchoredScaleCancelled;
+
+        final boolean pointerUp = action == MotionEvent.ACTION_POINTER_UP;
+        final int skipIndex = pointerUp ? event.getActionIndex() : -1;
+
+        // Determine focal point
+        // 计算缩放的中心点
+        float sumX = 0, sumY = 0;
+        final int div = pointerUp ? count - 1 : count;
+        final float focusX;
+        final float focusY;
+        if (inAnchoredScaleMode()) {
+            // In anchored scale mode, the focal pt is always where the double tap
+            // or button down gesture started
+            focusX = mAnchoredScaleStartX;
+            focusY = mAnchoredScaleStartY;
+            if (event.getY() < focusY) {
+                mEventBeforeOrAboveStartingGestureEvent = true;
+            } else {
+                mEventBeforeOrAboveStartingGestureEvent = false;
+            }
+        } else {
+            for (int i = 0; i < count; i++) {
+                if (skipIndex == i) continue;
+                sumX += event.getX(i);
+                sumY += event.getY(i);
+            }
+
+            focusX = sumX / div;
+            focusY = sumY / div;
+        }
+
+        // Determine average deviation from focal point
+        // 计算每个手指距中心点的平均距离
+        float devSumX = 0, devSumY = 0;
+        for (int i = 0; i < count; i++) {
+            if (skipIndex == i) continue;
+
+            // Convert the resulting diameter into a radius.
+            devSumX += Math.abs(event.getX(i) - focusX);
+            devSumY += Math.abs(event.getY(i) - focusY);
+        }
+        final float devX = devSumX / div;
+        final float devY = devSumY / div;
+
+        // Span is the average distance between touch points through the focal point;
+        // i.e. the diameter of the circle with a radius of the average deviation from
+        // the focal point.
+        // 得到以中心点为原点以平均距离为半径的圆的直径
+        final float spanX = devX * 2;
+        final float spanY = devY * 2;
+        final float span;
+        if (inAnchoredScaleMode()) {
+            span = spanY;
+        } else {
+            span = (float) Math.hypot(spanX, spanY);
+        }
+
+        // Dispatch begin/end events as needed.
+        // If the configuration changes, notify the app to reset its current state by beginning
+        // a fresh scale event stream.
+        final boolean wasInProgress = mInProgress;
+        // 把当前的中心点保存下来
+        mFocusX = focusX;
+        mFocusY = focusY;
+        if (!inAnchoredScaleMode() && mInProgress && (span < mMinSpan || configChanged)) {
+            mListener.onScaleEnd(this);
+            mInProgress = false;
+            mInitialSpan = span;
+        }
+        if (configChanged) {
+            // 保存直径
+            mPrevSpanX = mCurrSpanX = spanX;
+            mPrevSpanY = mCurrSpanY = spanY;
+            mInitialSpan = mPrevSpan = mCurrSpan = span;
+        }
+
+        final int minSpan = inAnchoredScaleMode() ? mSpanSlop : mMinSpan;
+        if (!mInProgress && span >=  minSpan &&
+                (wasInProgress || Math.abs(span - mInitialSpan) > mSpanSlop)) {
+            // 如果不是在缩放并且直径超过缩放直径阈值
+            mPrevSpanX = mCurrSpanX = spanX;
+            mPrevSpanY = mCurrSpanY = spanY;
+            mPrevSpan = mCurrSpan = span;
+            mPrevTime = mCurrTime;
+            // 询问是否要缩放
+            mInProgress = mListener.onScaleBegin(this);
+        }
+
+        // Handle motion; focal point and span/scale factor are changing.
+        if (action == MotionEvent.ACTION_MOVE) {
+            mCurrSpanX = spanX;
+            mCurrSpanY = spanY;
+            mCurrSpan = span;
+
+            boolean updatePrev = true;
+
+            if (mInProgress) {
+                // 通知正在缩放，并询问是否更新上一次求出的直径
+                updatePrev = mListener.onScale(this);
+            }
+
+            if (updatePrev) {
+                mPrevSpanX = mCurrSpanX;
+                mPrevSpanY = mCurrSpanY;
+                mPrevSpan = mCurrSpan;
+                mPrevTime = mCurrTime;
+            }
+        }
+
+        return true;
+    }
+
+    // 得到缩放系数
+    public float getScaleFactor() {
+        // ...
+        // 前后直径之比即为缩放系数
+        return mPrevSpan > 0 ? mCurrSpan / mPrevSpan : 1;
+    }
+}
+```
+
 屏幕分辨率：纵横方向上的像素点数
 
 dpi：对角线上每英寸像素点数
