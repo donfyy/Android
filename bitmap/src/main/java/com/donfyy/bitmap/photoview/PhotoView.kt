@@ -28,6 +28,7 @@ import com.donfyy.util.Utils
  * 使用Canvas绘制的Bitmap会应用Canvas的Matrix。
  * 所以此处Bitmap绘制的位置并未发生改变。
  * 以画布的中心点放大与缩小。
+ * 难点在于不同缩放系数下的滑动距离的处理。
  */
 class PhotoView @JvmOverloads constructor(
         context: Context,
@@ -55,16 +56,23 @@ class PhotoView @JvmOverloads constructor(
     private var offsetY = 0f
     private var overScroller: OverScroller
     private var scaleGestureDetector: ScaleGestureDetector
+    private val bitmapMatrix = Matrix()
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         bitmap?.let {
             val scaleFaction = (currScale - minScale) / (maxScale - minScale)
             // 当前放大比例为 small 时，scaleFaction = 0，不偏移
-            canvas.translate(offsetX * scaleFaction, offsetY * scaleFaction);
-            canvas.scale(currScale, currScale, width / 2f, height / 2f)
-//            canvas.drawRect(boarder, boarderPaint)
-            canvas.drawBitmap(it, originalLeft, originalTop, paint)
+//            canvas.translate(offsetX * scaleFaction, offsetY * scaleFaction);
+//            canvas.scale(currScale, currScale, width / 2f, height / 2f)
+////            canvas.drawRect(boarder, boarderPaint)
+//            canvas.drawBitmap(it, originalLeft, originalTop, paint)
+            // 对画布进行操作，稍微有点难以理解。。。画布的操作正好是反着来的
+            bitmapMatrix.reset()
+            bitmapMatrix.postScale(currScale, currScale, it.width / 2f, it.height / 2f)
+            bitmapMatrix.postTranslate(originalLeft, originalTop)
+            bitmapMatrix.postTranslate(offsetX * scaleFaction, offsetY * scaleFaction)
+            canvas.drawBitmap(it, bitmapMatrix, paint)
         }
     }
 

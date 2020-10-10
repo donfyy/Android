@@ -3,6 +3,7 @@ package com.donfyy.bitmap.photoview;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -55,10 +56,16 @@ public class MultiTouchEvent extends View {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     }
 
+    Matrix matrix = new Matrix();
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawBitmap(bitmap, offsetX, offsetY, paint);
+//        canvas.drawBitmap(bitmap, offsetX, offsetY, paint);
+
+        matrix.reset();
+        matrix.postScale(0.5f, 0.5f);
+        matrix.postTranslate(offsetX, offsetY);
+        canvas.drawBitmap(bitmap, matrix, paint);
     }
 
     @Override
