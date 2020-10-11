@@ -1,41 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".canvas.CanvasActivity">
-<com.donfyy.viewexample.view.FlowLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <Button
-        android:layout_width="wrap_content"
-        android:text="Compose"
-        android:onClick="onShowCompose"
-        android:layout_height="wrap_content"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:text="Draw"
-        android:onClick="onShowDraw"
-        android:layout_height="wrap_content"/>
+    <com.donfyy.viewexample.view.FlowLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:text="Stack"
-        android:onClick="onShowStack"
-        android:layout_height="wrap_content"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onShowTextMultiDraw"
+            android:text="多行文本" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:text="Transformation"
-        android:onClick="onShowTransformation"
-        android:layout_height="wrap_content"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onShowXfermodes"
+            android:text="Xfermodes" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:text="Matrix"
-        android:onClick="onShowMatrix"
-        android:layout_height="wrap_content"/>
-</com.donfyy.viewexample.view.FlowLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onShowRoundImage"
+            android:text="圆形头像" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onShowCompose"
+            android:text="Compose" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onShowDraw"
+            android:text="Draw" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onShowStack"
+            android:text="Stack" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onShowTransformation"
+            android:text="Transformation" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onShowMatrix"
+            android:text="Matrix" />
+    </com.donfyy.viewexample.view.FlowLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

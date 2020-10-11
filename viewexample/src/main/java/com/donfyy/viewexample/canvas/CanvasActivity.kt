@@ -35,4 +35,15 @@ class CanvasActivity : AppCompatActivity() {
     fun onShowMatrix(view: View) {
         showActivity(MatrixActivity::class.java)
     }
+
+    fun onShowRoundImage(view: View) {
+        showActivity(BitmapDrawActivity::class.java)
+    }
+
+    fun onShowXfermodes(view: View) {
+        showActivity(XfermodesActivity::class.java)
+    }
+    fun onShowTextMultiDraw(view: View) {
+        showActivity(TextMultiDrawActivity::class.java)
+    }
 }
