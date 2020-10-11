@@ -3,7 +3,6 @@ package com.donfyy.viewexample.view
 import android.content.Context
 import android.graphics.Point
 import android.graphics.PointF
-import android.os.Build
 import android.util.AttributeSet
 import android.view.*
 import android.widget.OverScroller
@@ -126,7 +125,7 @@ class FlowLayout @JvmOverloads constructor(context: Context?, attrs: AttributeSe
                 if (yVelocity != null) {
                     if (abs(yVelocity) > mMinimumVelocity) {
                         scroller.fling(
-                                scrollX, scrollY, 0, -(yVelocity).toInt(), 0, 0, 0, max(0, contentHeight - measuredHeight), 0, measuredHeight / 2
+                                scrollX, scrollY, 0, -(yVelocity).toInt(), 0, 0, 0, max(0, contentHeight - measuredHeight), 0, measuredHeight / 4
                         )
                         postInvalidateOnAnimation()
                     } else if (scroller.springBack(scrollX, scrollY, 0, 0, 0, contentHeight - measuredHeight)) {

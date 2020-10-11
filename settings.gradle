@@ -1,3 +1,4 @@
+include ':suspension'
 include ':bitmap'
 include ':shrink'
 include ':keepalive'

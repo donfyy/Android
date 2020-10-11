@@ -70,6 +70,8 @@ ext {
             MPAndroidChart:'com.github.PhilJay:MPAndroidChart:v3.1.0',
             guava:'com.google.guava:guava:24.1-jre',
             picasso:'com.squareup.picasso:picasso:2.71828',
+            butterknife:'com.jakewharton:butterknife:10.2.3',
+            butterknife_compiler:'com.jakewharton:butterknife-compiler:10.2.3',
 
     ]
 }
