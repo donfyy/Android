@@ -69,5 +69,7 @@ ext {
             utilcodex:'com.blankj:utilcodex:1.29.0',
             MPAndroidChart:'com.github.PhilJay:MPAndroidChart:v3.1.0',
             guava:'com.google.guava:guava:24.1-jre',
+            picasso:'com.squareup.picasso:picasso:2.71828',
+
     ]
 }

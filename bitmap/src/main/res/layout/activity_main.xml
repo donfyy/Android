@@ -10,6 +10,11 @@
 
     <Button
         android:layout_width="wrap_content"
+        android:text="图片缓存"
+        android:onClick="onShowCache"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:layout_width="wrap_content"
         android:text="放大缩小"
         android:onClick="onShowPhoto"
         android:layout_height="wrap_content"/>
