@@ -36,12 +36,14 @@ class BitmapDrawView @JvmOverloads constructor(context: Context, attrs: Attribut
         var y: Float
 
 //        canvas.drawBitmap(mBitmap, 50 * mDensity, 20 * mDensity, mPaint);
+        // 通过xfermodes
         x = width / 2 - mBitmap.width / 2.toFloat()
         y = 140 * mDensity
         mBitmapEx = processRoundBitmap(mBitmap)
         canvas.drawBitmap(mBitmapEx, x, y, mPaint)
 
         y = 260 * mDensity
+        // 通过剪裁
         canvas.save()
 //        canvas.clipRect(x, y, x + mWidth, y + mHeight)
         mClipPath.addOval(RectF(x, y, x + mWidth, y + mHeight), Path.Direction.CCW)
@@ -50,6 +52,9 @@ class BitmapDrawView @JvmOverloads constructor(context: Context, attrs: Attribut
         canvas.drawBitmap(mBitmap, x, y, mPaint)
 //        canvas.drawColor(Color.WHITE)
         canvas.restore()
+        // 第三种方式通过着色器 BitmapShader
+        mPaint.shader = BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+//        canvas.drawOval(0f, 0f, 1f, 1f, mPaint)
     }
 
     private fun processRoundBitmap(bitmap: Bitmap): Bitmap {
