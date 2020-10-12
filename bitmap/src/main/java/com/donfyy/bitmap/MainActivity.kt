@@ -2,14 +2,15 @@ package com.donfyy.bitmap
 
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.os.Bundle
 import android.util.LruCache
 import android.util.TypedValue
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.values
 import com.blankj.utilcode.util.LogUtils
 import com.donfyy.bitmap.cache.CacheActivity
-import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                 "height = ${image.height}")
         image.recycle()
 
-        val cache = object  : LruCache<Int, Int>(3) {
+        val cache = object : LruCache<Int, Int>(3) {
             override fun entryRemoved(evicted: Boolean, key: Int?, oldValue: Int?, newValue: Int?) {
                 LogUtils.d(oldValue)
             }
@@ -47,6 +48,16 @@ class MainActivity : AppCompatActivity() {
         cache.put(2, 2)
         cache.put(3, 3)
         cache.put(4, 4)
+
+        val m1 = Matrix().apply { setValues(floatArrayOf(1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f)) }
+        val m2 = Matrix().apply { setValues(floatArrayOf(1f, 2f, 3f, 1f, 2f, 3f, 1f, 2f, 3f)) }
+        val m3 = Matrix().apply { setValues(floatArrayOf(1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f)) }
+        val m4 = Matrix().apply { setValues(floatArrayOf(1f, 2f, 3f, 1f, 2f, 3f, 1f, 2f, 3f)) }
+
+        m1.postConcat(m2) // m2 * m1
+        LogUtils.d(m1.toString())
+        m3.preConcat(m4) // m3 * m4
+        LogUtils.d(m3.toString())
     }
 
     private fun showActivity(clazz: Class<out AppCompatActivity>) {
