@@ -8,3 +8,6 @@
 - [Visual Studio Code Docs](https://code.visualstudio.com/docs)
 - [那两年炼就的Android内功修养](https://blog.csdn.net/Luoshengyang/article/details/8923485)
 - [动画](https://github.com/OCNYang/Android-Animation-Set)
+- [JavaFamily](https://github.com/AobingJava/JavaFamily)
+- [CyC2018/CS-Notes](https://github.com/CyC2018/CS-Notes)
+- [Snailclimb/JavaGuide](https://github.com/Snailclimb/JavaGuide)
