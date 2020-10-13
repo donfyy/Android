@@ -99,9 +99,15 @@ public class ViewPagerFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         ViewPager viewPager = view.findViewById(R.id.viewPager);
         PagerAdapterExample underlyingPagerAdapter = new PagerAdapterExample();
-        view.findViewById(R.id.jump).setOnClickListener(v -> {
+//        view.findViewById(R.id.jump).setOnClickListener(v -> {
             underlyingPagerAdapter.setOriginData(Arrays.asList(Color.YELLOW, Color.BLUE, Color.RED, Color.CYAN));
-            underlyingPagerAdapter.notifyDataSetChanged();
+//            underlyingPagerAdapter.notifyDataSetChanged();
+//        });
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+
+            }
         });
         InfiniteLoopPagerAdapter infiniteLoopPagerAdapter = new InfiniteLoopPagerAdapter(underlyingPagerAdapter);
         infiniteLoopPagerAdapter.assemble(viewPager);

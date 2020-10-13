@@ -89,11 +89,11 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        view.findViewById(R.id.viewPagerFragment).setOnClickListener(v -> {
-//            getFragmentManager().beginTransaction()
-//                    .replace(R.id.activity_container, new ViewPagerFragment())
-//                    .commit();
-//        });
+        view.findViewById(R.id.viewPager).setOnClickListener(v -> {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.activity_container, new ViewPagerFragment())
+                    .commit();
+        });
     }
 
     @Override

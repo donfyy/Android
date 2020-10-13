@@ -30,6 +30,7 @@ public class ZoomOutSlideTransformer implements ViewPager.PageTransformer {
     public void transformPage(@NonNull View page, float position) {
         ViewPager viewPager = (ViewPager) page.getParent();
 //        note:position is reevaluated as previous evaluation not consider the padding left value of ViewPager
+//        float adjustedPosition = position;
         float adjustedPosition = (((float) (page.getLeft() - viewPager.getPaddingLeft() - viewPager.getScrollX())))
                 / (viewPager.getWidth() - viewPager.getPaddingLeft() - viewPager.getPaddingRight());
 
@@ -38,8 +39,8 @@ public class ZoomOutSlideTransformer implements ViewPager.PageTransformer {
             adjustedPosition = Integer.compare(adapterPositionOfView, viewPager.getCurrentItem());
         }
 
-        int height = viewPager.getHeight() - viewPager.getPaddingTop() - viewPager.getPaddingBottom();
-        int width = viewPager.getWidth() - viewPager.getPaddingLeft() - viewPager.getPaddingRight();
+        int height = page.getHeight();
+        int width = page.getWidth();
 
         float scaleFactor = Math.max(mMinScale, 1 - Math.abs(adjustedPosition));
 
@@ -58,6 +59,5 @@ public class ZoomOutSlideTransformer implements ViewPager.PageTransformer {
         }
 
         page.setAlpha(mMinAlpha + (scaleFactor - mMinScale) / (1 - mMinScale) * (1 - mMinAlpha));
-
     }
 }
