@@ -11,3 +11,4 @@
 - [JavaFamily](https://github.com/AobingJava/JavaFamily)
 - [CyC2018/CS-Notes](https://github.com/CyC2018/CS-Notes)
 - [Snailclimb/JavaGuide](https://github.com/Snailclimb/JavaGuide)
+- [Android 技能图谱学习路线](https://www.jianshu.com/p/88e32ef66ef2)
