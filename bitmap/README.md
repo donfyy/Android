@@ -308,6 +308,43 @@ class ScaleGestureDetector {
 }
 ```
 
+```java
+    public void prepareMatrixValuePx(float xChartMin, float deltaX, float deltaY, float yChartMin) {
+        float scaleX = (float) ((mViewPortHandler.contentWidth()) / deltaX);
+        float scaleY = (float) ((mViewPortHandler.contentHeight()) / deltaY);
+        // ...
+        // setup all matrices
+        // 矩阵变换还是妙，数学太妙了
+        mMatrixValueToPx.reset();
+        // value 先在x和y方向上平移 -xChartMin, -yChartMin
+        mMatrixValueToPx.postTranslate(-xChartMin, -yChartMin);
+        // 缩放 value
+        mMatrixValueToPx.postScale(scaleX, -scaleY);
+    }
+
+```
+```kotlin
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        bitmap?.let {
+            val scaleFaction = (currScale - minScale) / (maxScale - minScale)
+            // 当前放大比例为 small 时，scaleFaction = 0，不偏移
+    //            canvas.translate(offsetX * scaleFaction, offsetY * scaleFaction);
+    //            canvas.scale(currScale, currScale, width / 2f, height / 2f)
+    ////            canvas.drawRect(boarder, boarderPaint)
+    //            canvas.drawBitmap(it, originalLeft, originalTop, paint)
+            // 对画布进行操作，稍微有点难以理解。。。画布的操作正好是反着来的
+            bitmapMatrix.reset()
+            // 以bitmap的中心为轴将bitmap缩放一半
+            bitmapMatrix.postScale(currScale, currScale, it.width / 2f, it.height / 2f)
+            // 将bitmap平移 originalLeft, originalTop
+            bitmapMatrix.postTranslate(originalLeft, originalTop)
+            bitmapMatrix.postTranslate(offsetX * scaleFaction, offsetY * scaleFaction)
+            canvas.drawBitmap(it, bitmapMatrix, paint)
+        }
+    }
+```
+
 屏幕分辨率：纵横方向上的像素点数
 
 dpi：对角线上每英寸像素点数
