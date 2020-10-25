@@ -1,3 +1,4 @@
+include ':jetpack'
 include ':suspension'
 include ':bitmap'
 include ':shrink'

@@ -9,7 +9,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
+        classpath 'com.android.tools.build:gradle:4.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -39,13 +39,16 @@ ext {
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
     dependencies = [
-            appcompat:'androidx.appcompat:appcompat:1.1.0',
+            appcompat:'androidx.appcompat:appcompat:1.2.0',
             junit:'junit:junit:4.12',
-            ext_junit:'androidx.test.ext:junit:1.1.1',
-            espresso_core:'androidx.test.espresso:espresso-core:3.2.0',
-            constraintlayout:'androidx.constraintlayout:constraintlayout:1.1.3',
-            material:'com.google.android.material:material:1.2.0',
+            ext_junit:'androidx.test.ext:junit:1.1.2',
+            espresso_core:'androidx.test.espresso:espresso-core:3.3.0',
+            constraintlayout:'androidx.constraintlayout:constraintlayout:2.0.2',
+            material:'com.google.android.material:material:1.2.1',
             lifecycleExtensions:'androidx.lifecycle:lifecycle-extensions:2.2.0',
+            coreKtx :'androidx.core:core-ktx:1.3.2',
+            livedata_ktx:'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0',
+            viewmodel_ktx:'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0',
             navigation_fragment:"androidx.navigation:navigation-fragment:$navVersion",
             navigation_ui:"androidx.navigation:navigation-ui:$navVersion",
             navigationFragmentKtx:"androidx.navigation:navigation-fragment-ktx:$navVersion",
@@ -60,8 +63,8 @@ ext {
             biometric:'androidx.biometric:biometric:1.0.1',
             viewPagerTransforms:'com.ToxicBakery.viewpager.transforms:view-pager-transforms:2.0.24',
             kotlinStdlibJdk7:"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
+            kotlinStdlib:"org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
             viewpager2:"androidx.viewpager2:viewpager2:1.0.0",
-            coreKtx :'androidx.core:core-ktx:1.2.0',
             lottie :'com.airbnb.android:lottie:3.4.0',
             leakcanary:'com.squareup.leakcanary:leakcanary-android:2.4',
             rxJava:'io.reactivex.rxjava3:rxjava:3.0.5',
