@@ -191,7 +191,21 @@ LiveData的实现基于Lifecycle。同时为数据提供了版本号。
 
 ```
 
+## LiveDataBus
+
+问题：先往LiveDataBus发送了一个数据，然后观察者订阅LiveDataBus，观察者收到了通知
+
+期望：观察者只收到订阅LiveDataBus后的数据
+
+原因：LiveData的版本号在接收到数据后增加了，观察者的版本号在订阅是初始值，所以会收到通知
+
+解决方案：观察者订阅后，同步其版本号
+
+难点：订阅过程中会收到通知
+
+难点解决方案：包装观察者，检查调用栈，如果当前是订阅方法中触发的通知，则过滤掉
+
 ## 参考链接
 
-[Android消息总线的演进之路：用LiveDataBus替代RxBus、EventBus](https://tech.meituan.com/2018/07/26/android-livedatabus.html)
+[Android消息总线详解](https://github.com/JeremyLiao/SmartEventBus/blob/master/docs/bus_all.md)
 
