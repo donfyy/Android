@@ -1,6 +1,8 @@
 # 参考链接
 
 - [TCP协议](https://www.rfc-editor.org/rfc/rfc793.txt)
+- [URL vs URI: Most important Differences You Must Know](https://www.guru99.com/url-vs-uri-difference.html#:~:text=URI-,URL%20stands%20for%20Uniform%20Resource%20Locator.,Uniform%20Resource%20Name)%20or%20both.)
+- [HTTP Over TLS](https://tools.ietf.org/html/rfc2818)
 - [刘望舒的博客](https://blog.csdn.net/itachi85)
 - [张鸿洋的博客](https://blog.csdn.net/lmj623565791)
 - [codeKK](https://p.codekk.com/)
