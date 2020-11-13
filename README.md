@@ -1,6 +1,7 @@
 # 参考链接
 
 - [TRANSMISSION CONTROL PROTOCOL](https://www.rfc-editor.org/rfc/rfc793.txt)
+- [The Transport Layer Security (TLS) Protocol](https://tools.ietf.org/html/rfc5246)
 - [Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content](https://tools.ietf.org/html/rfc7231)
 - [Hypertext Transfer Protocol Version 2 (HTTP/2)](https://tools.ietf.org/html/rfc2818)
 - [HTTP Over TLS](https://tools.ietf.org/html/rfc2818)
