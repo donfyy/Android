@@ -1,6 +1,7 @@
 # 参考链接
 
 - [SSL/TLS协议运行机制的概述](https://www.ruanyifeng.com/blog/2014/02/ssl_tls.html)
+- [Wireshark 抓包理解 HTTPS 请求流程](https://www.jianshu.com/p/cf8c2f2cd18a)
 - [TRANSMISSION CONTROL PROTOCOL](https://www.rfc-editor.org/rfc/rfc793.txt)
 - [The Transport Layer Security (TLS) Protocol](https://tools.ietf.org/html/rfc5246)
 - [Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content](https://tools.ietf.org/html/rfc7231)
