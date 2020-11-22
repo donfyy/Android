@@ -1,10 +1,13 @@
 # 参考链接
 
 - [SSL/TLS协议运行机制的概述](https://www.ruanyifeng.com/blog/2014/02/ssl_tls.html)
+- [HTTPS中间人攻击实践（原理·实践）](https://www.cnblogs.com/lulianqi/p/10558719.html)
 - [Wireshark 抓包理解 HTTPS 请求流程](https://www.jianshu.com/p/cf8c2f2cd18a)
+- [RSA算法原理](http://www.ruanyifeng.com/blog/2013/06/rsa_algorithm_part_one.html)
 - [TRANSMISSION CONTROL PROTOCOL](https://www.rfc-editor.org/rfc/rfc793.txt)
 - [The Transport Layer Security (TLS) Protocol](https://tools.ietf.org/html/rfc5246)
-- [Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content](https://tools.ietf.org/html/rfc7231)
+- [Hypertext Transfer Protocol (HTTP/1.1)](https://tools.ietf.org/html/rfc2616)
+- [Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing](https://tools.ietf.org/html/rfc7230)
 - [Hypertext Transfer Protocol Version 2 (HTTP/2)](https://tools.ietf.org/html/rfc2818)
 - [HTTP Over TLS](https://tools.ietf.org/html/rfc2818)
 - [URL vs URI: Most important Differences You Must Know](https://www.guru99.com/url-vs-uri-difference.html#:~:text=URI-,URL%20stands%20for%20Uniform%20Resource%20Locator.,Uniform%20Resource%20Name)%20or%20both.)
