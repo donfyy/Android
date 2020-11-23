@@ -6,7 +6,7 @@
 - [RSA算法原理](http://www.ruanyifeng.com/blog/2013/06/rsa_algorithm_part_one.html)
 - [TRANSMISSION CONTROL PROTOCOL](https://www.rfc-editor.org/rfc/rfc793.txt)
 - [The Transport Layer Security (TLS) Protocol](https://tools.ietf.org/html/rfc5246)
-- [Hypertext Transfer Protocol (HTTP/1.1)](https://tools.ietf.org/html/rfc2616)
+- [Evolution of HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP)
 - [Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing](https://tools.ietf.org/html/rfc7230)
 - [Hypertext Transfer Protocol Version 2 (HTTP/2)](https://tools.ietf.org/html/rfc2818)
 - [HTTP Over TLS](https://tools.ietf.org/html/rfc2818)
