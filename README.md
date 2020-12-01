@@ -1,6 +1,9 @@
 # 参考链接
 
 - [SSL/TLS协议运行机制的概述](https://www.ruanyifeng.com/blog/2014/02/ssl_tls.html)
+- [AES加密算法的详细介绍与实现](https://blog.csdn.net/qq_28205153/article/details/55798628)
+- [Android HTTPS 自制证书实现双向认证(OkHttp + Retrofit + Rxjava)](https://www.jianshu.com/p/64172ccfb73b)
+- [Android+Nginx一步步配置https单向/双向认证请求](https://juejin.cn/post/6844903953407148045#heading-4)
 - [HTTPS中间人攻击实践（原理·实践）](https://www.cnblogs.com/lulianqi/p/10558719.html)
 - [Wireshark 抓包理解 HTTPS 请求流程](https://www.jianshu.com/p/cf8c2f2cd18a)
 - [RSA算法原理](http://www.ruanyifeng.com/blog/2013/06/rsa_algorithm_part_one.html)

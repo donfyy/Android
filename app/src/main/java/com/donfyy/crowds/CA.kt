@@ -8,6 +8,7 @@ import java.security.KeyStore
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import javax.net.ssl.HttpsURLConnection
+import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 
@@ -29,7 +30,10 @@ fun ca() {
         load(null, null)
         setCertificateEntry("ca", ca)
     }
-
+    val kmfAlgorithm = KeyManagerFactory.getDefaultAlgorithm()
+    val kmf = KeyManagerFactory.getInstance(kmfAlgorithm).apply {
+        init(keyStore, "aaa".toCharArray())
+    }
     // Create a TrustManager that trusts the CAs inputStream our KeyStore
     val tmfAlgorithm: String = TrustManagerFactory.getDefaultAlgorithm()
     val tmf: TrustManagerFactory = TrustManagerFactory.getInstance(tmfAlgorithm).apply {
@@ -38,7 +42,7 @@ fun ca() {
 
     // Create an SSLContext that uses our TrustManager
     val context: SSLContext = SSLContext.getInstance("TLS").apply {
-        init(null, tmf.trustManagers, null)
+        init(kmf.keyManagers, tmf.trustManagers, null)
     }
 
     // Tell the URLConnection to use a SocketFactory from our SSLContext
