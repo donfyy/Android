@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.donfyy.crowds.viewpager.ViewPagerFragment;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -89,7 +91,24 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.buttonA).setOnClickListener(v -> {
+            try {
+                Thread.sleep(6000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Snackbar.make(v, "A", BaseTransientBottomBar.LENGTH_SHORT).show();
+        });
+        view.findViewById(R.id.buttonB).setOnClickListener(v -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Snackbar.make(v, "B", BaseTransientBottomBar.LENGTH_SHORT).show();
+        });
         view.findViewById(R.id.viewPager).setOnClickListener(v -> {
+
             getFragmentManager().beginTransaction()
                     .replace(R.id.activity_container, new ViewPagerFragment())
                     .commit();

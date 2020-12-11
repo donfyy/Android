@@ -1,6 +1,8 @@
 package com.donfyy.crowds;
 
+import android.os.Debug;
 import android.util.Log;
+import android.view.Choreographer;
 
 import com.donfyy.crowds.dagger.DaggerAppComponent;
 
@@ -13,9 +15,19 @@ public class App extends DaggerApplication {
     @Inject
     AppComponentA mAppComponentA;
 
+    public App() {
+        Debug.startMethodTracing("aaa_trace");
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
+            @Override
+            public void doFrame(long frameTimeNanos) {
+
+            }
+        });
 
         Log.e(App.class.getSimpleName(), "injected!" + mAppComponentA);
     }

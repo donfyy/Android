@@ -1,5 +1,6 @@
 # 参考链接
 
+- [爱奇艺开源的组件化跨进程通信解决方案](https://mp.weixin.qq.com/s/oZgBZdVQml3VjrW2DG-OKg)
 - [SSL/TLS协议运行机制的概述](https://www.ruanyifeng.com/blog/2014/02/ssl_tls.html)
 - [AES加密算法的详细介绍与实现](https://blog.csdn.net/qq_28205153/article/details/55798628)
 - [Android HTTPS 自制证书实现双向认证(OkHttp + Retrofit + Rxjava)](https://www.jianshu.com/p/64172ccfb73b)
@@ -8,6 +9,7 @@
 - [Wireshark 抓包理解 HTTPS 请求流程](https://www.jianshu.com/p/cf8c2f2cd18a)
 - [RSA算法原理](http://www.ruanyifeng.com/blog/2013/06/rsa_algorithm_part_one.html)
 - [TRANSMISSION CONTROL PROTOCOL](https://www.rfc-editor.org/rfc/rfc793.txt)
+- [为什么TIME_WAIT状态是2MSL？](https://blog.csdn.net/a3192048/article/details/85414502?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromBaidu-1.not_use_machine_learn_pai&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromBaidu-1.not_use_machine_learn_pai)
 - [The Transport Layer Security (TLS) Protocol](https://tools.ietf.org/html/rfc5246)
 - [Evolution of HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Evolution_of_HTTP)
 - [Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing](https://tools.ietf.org/html/rfc7230)

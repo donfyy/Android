@@ -2,6 +2,7 @@ package com.donfyy.crowds;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.util.Log;
 
@@ -54,6 +55,13 @@ public class MainActivity extends AppCompatActivity implements HasFragmentInject
 
         binding.executePendingBindings();
 //        biometric();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        Debug.stopMethodTracing();
     }
 
     private void sendMsg(User user, Handler handler) {
