@@ -1,6 +1,7 @@
 # 参考链接
 
 - [爱奇艺开源的组件化跨进程通信解决方案](https://mp.weixin.qq.com/s/oZgBZdVQml3VjrW2DG-OKg)
+- [Jetpack源码 之 ViewModel](https://www.littlecorgi.top/posts/b309316d.html)
 - [SSL/TLS协议运行机制的概述](https://www.ruanyifeng.com/blog/2014/02/ssl_tls.html)
 - [AES加密算法的详细介绍与实现](https://blog.csdn.net/qq_28205153/article/details/55798628)
 - [Android HTTPS 自制证书实现双向认证(OkHttp + Retrofit + Rxjava)](https://www.jianshu.com/p/64172ccfb73b)

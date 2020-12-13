@@ -1,5 +1,6 @@
 package com.donfyy.crowds;
 
+import android.os.AsyncTask;
 import android.os.Debug;
 import android.util.Log;
 import android.view.Choreographer;
@@ -28,6 +29,13 @@ public class App extends DaggerApplication {
 
             }
         });
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                return null;
+            }
+        }.execute();
 
         Log.e(App.class.getSimpleName(), "injected!" + mAppComponentA);
     }
