@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements HasFragmentInject
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        Debug.stopMethodTracing();
+//        Debug.stopMethodTracing();
     }
 
     private void sendMsg(User user, Handler handler) {

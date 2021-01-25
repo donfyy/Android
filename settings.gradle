@@ -1,3 +1,4 @@
+include ':activityhookdemo'
 include ':Socket'
 include ':jetpack'
 include ':suspension'

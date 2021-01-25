@@ -17,7 +17,7 @@ public class App extends DaggerApplication {
     AppComponentA mAppComponentA;
 
     public App() {
-        Debug.startMethodTracing("aaa_trace");
+//        Debug.startMethodTracing("aaa_trace");
     }
 
     @Override
@@ -38,7 +38,19 @@ public class App extends DaggerApplication {
         }.execute();
 
         Log.e(App.class.getSimpleName(), "injected!" + mAppComponentA);
+        Log.e(App.class.getSimpleName(), getClassLoader().toString());
+//        try {
+//            throw new R();
+//        } catch (R r) {
+//            r.printStackTrace();
+//        }
     }
+//    static class R extends Throwable implements Runnable {
+//        @Override
+//        public void run() {
+//
+//        }
+//    }
 
     @Override
     protected AndroidInjector<? extends DaggerApplication> applicationInjector() {

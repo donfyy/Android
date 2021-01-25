@@ -1,6 +1,8 @@
 # 参考链接
 
 - [爱奇艺开源的组件化跨进程通信解决方案](https://mp.weixin.qq.com/s/oZgBZdVQml3VjrW2DG-OKg)
+- [Java并发编程之final应用](https://blog.csdn.net/wufaliang003/article/details/107065658)
+- [深入理解java反射原理](https://www.cnblogs.com/yougewe/p/10125073.html)
 - [Jetpack源码 之 ViewModel](https://www.littlecorgi.top/posts/b309316d.html)
 - [SSL/TLS协议运行机制的概述](https://www.ruanyifeng.com/blog/2014/02/ssl_tls.html)
 - [AES加密算法的详细介绍与实现](https://blog.csdn.net/qq_28205153/article/details/55798628)
