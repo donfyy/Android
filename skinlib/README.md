@@ -56,7 +56,11 @@ class LayoutInflater {
             // 递归的构建整个view树
             rInflateChildren(parser, temp, attrs, true);
             // ...
-            // 如果父节点存在并且需要将view树添加到父节点，则返回父节点
+            // 如果父节点存在并且需要将view树添加到父节点，则将view树添加到父节点，并返回父节点
+            if (root != null && attachToRoot) {
+                root.addView(temp, params);
+            }
+            // 如果父节点不存在并且不需要将view树添加到父节点，则返回view树跟节点
             if (root == null || !attachToRoot) {
                 result = temp;
             }
