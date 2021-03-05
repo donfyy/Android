@@ -1,5 +1,7 @@
 # 参考链接
 
+- [OAuth 2.0 的一个简单解释](http://www.ruanyifeng.com/blog/2019/04/oauth_design.html)
+- [OAuth 2.0 的四种方式](http://www.ruanyifeng.com/blog/2019/04/oauth-grant-types.html)
 - [爱奇艺开源的组件化跨进程通信解决方案](https://mp.weixin.qq.com/s/oZgBZdVQml3VjrW2DG-OKg)
 - [Java并发编程之final应用](https://blog.csdn.net/wufaliang003/article/details/107065658)
 - [深入理解java反射原理](https://www.cnblogs.com/yougewe/p/10125073.html)
