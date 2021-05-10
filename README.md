@@ -1,5 +1,6 @@
 # 参考链接
 
+- [Paper - 安全技术精粹](https://paper.seebug.org/)
 - [OAuth 2.0 的一个简单解释](http://www.ruanyifeng.com/blog/2019/04/oauth_design.html)
 - [OAuth 2.0 的四种方式](http://www.ruanyifeng.com/blog/2019/04/oauth-grant-types.html)
 - [爱奇艺开源的组件化跨进程通信解决方案](https://mp.weixin.qq.com/s/oZgBZdVQml3VjrW2DG-OKg)

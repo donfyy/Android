@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.donfyy.crowds.databinding.ActivityMainBindingImpl;
 
+import java.util.HashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +26,7 @@ import dagger.android.HasFragmentInjector;
 
 public class MainActivity extends AppCompatActivity implements HasFragmentInjector {
     private static final String MY_APP_TAG = "MY_APP_TAG";
+    private static final String TAG = "MainActivity";
     //    private static final String MY_APP_TAG = MainActivity.class.getSimpleName();
     @Inject
     AppComponentA mAppComponentA;
@@ -55,6 +58,19 @@ public class MainActivity extends AppCompatActivity implements HasFragmentInject
 
         binding.executePendingBindings();
 //        biometric();
+        
+        testHashMap();
+    }
+
+    private void testHashMap() {
+        long s = System.currentTimeMillis();
+        HashMap<String, String> map = new HashMap<>();
+        for (int i = 0; i < 2000; i++) {
+            map.put(String.valueOf(i), String.valueOf(i));
+        }
+        long e = System.currentTimeMillis();
+
+        Log.i(TAG, "hash map cost:" + (e - s));
     }
 
     @Override
