@@ -5,6 +5,8 @@ import android.content.Context;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -24,5 +26,13 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("com.donfyy.androidcrowds", appContext.getPackageName());
+    }
+
+    @Test
+    public void testJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject("{text: 1}");
+        String text = jsonObject.optString("text");
+        System.out.println("text:" + text);
+        assertTrue(text, text == null);
     }
 }
