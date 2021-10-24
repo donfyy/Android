@@ -1,3 +1,5 @@
+include ':target30'
+include ':rxjava2'
 include ':webview'
 include ':activityhookdemo'
 include ':Socket'
