@@ -44,4 +44,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/buttonB" />
 
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        app:layout_constraintLeft_toRightOf="@+id/buttonA"
+        app:layout_constraintTop_toTopOf="@+id/buttonA" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

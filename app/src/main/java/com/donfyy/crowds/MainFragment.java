@@ -6,9 +6,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.InputType;
+import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.donfyy.crowds.viewpager.ViewPagerFragment;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -115,6 +118,9 @@ public class MainFragment extends Fragment {
                     .replace(R.id.activity_container, new ViewPagerFragment())
                     .commit();
         });
+//        EditText editText = (EditText) view.findViewById(R.id.editText);
+//        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+//        editText.setInputType(InputT);
     }
 
     @Override
