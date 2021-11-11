@@ -53,6 +53,14 @@ dependencies {
     // Dynamic Feature Module Support
     implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
 
+    implementation "com.alibaba:fastjson:1.1.62.android"
+
     // Testing Navigation
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+    def asm_version = '9.2'
+    testImplementation "org.ow2.asm:asm:$asm_version"
+    testImplementation "org.ow2.asm:asm-tree:$asm_version"
+    testImplementation "org.ow2.asm:asm-util:$asm_version"
+    testImplementation "org.ow2.asm:asm-analysis:$asm_version"
+    testImplementation "org.ow2.asm:asm-commons:$asm_version"
 }

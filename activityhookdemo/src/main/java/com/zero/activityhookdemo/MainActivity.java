@@ -3,9 +3,10 @@ package com.zero.activityhookdemo;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.zero.activityhookdemo.hook.HookHelper;
 
