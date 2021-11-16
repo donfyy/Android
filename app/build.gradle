@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 //// apply ByteX宿主
-//apply plugin: 'bytex'
-//ByteX {
-//    enable true
-//    enableInDebug true
-//    logLevel "DEBUG"
-//}
-//
-//// 按需apply bytex 插件
-//apply plugin: 'bytex.sourcefile'
+apply plugin: 'bytex'
+ByteX {
+    enable true
+    enableInDebug true
+    logLevel "DEBUG"
+}
+
+// 按需apply bytex 插件
+apply plugin: 'bytex.sourcefile'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -63,7 +63,7 @@ dependencies {
     // Dynamic Feature Module Support
     implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
 
-    implementation "com.alibaba:fastjson:1.1.62.android"
+    implementation "com.alibaba:fastjson:1.2.57"
 
     // Testing Navigation
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"

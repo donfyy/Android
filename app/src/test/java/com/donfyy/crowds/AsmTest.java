@@ -2,6 +2,10 @@ package com.donfyy.crowds;
 
 import android.webkit.CookieManager;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.donfyy.crowds.asm.XxxPlugin;
+
 import org.junit.Test;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
@@ -12,15 +16,23 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.TypePath;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -30,11 +42,40 @@ import java.util.Arrays;
 public class AsmTest {
 
     @Test
+    public void testJSON() {
+        System.out.println(JSON.toJSONString(new XxxPlugin.XxxRequest()));
+    }
+
+    @Test
+    public void generateJson() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(new File("data.origin")));
+//        StringBuilder sb = new StringBuilder();
+//        char[] buffer = new char[1024 * 1024 * 10];
+//        int len = 0;
+        ApiNameList apiNameList = new ApiNameList();
+//        ArrayList<String> strings = new ArrayList<>();
+        Set<String> stringSet = new HashSet<>();
+//        apiNameList.setList(strings);
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            if (!line.trim().isEmpty()) {
+//                strings.add(line);
+                stringSet.add(line.trim());
+            }
+        }
+        apiNameList.setList(new ArrayList<>(stringSet));
+        FileOutputStream outputStream = new FileOutputStream("data.apiNameList.json");
+        outputStream.write(JSON.toJSONString(apiNameList).getBytes());
+        outputStream.close();
+    }
+
+    @Test
     public void test1() throws IOException {
         System.out.println(new File(".").getCanonicalPath());
 //        new ClassReader()
 //        /Users/bytedance/Project/donfyy/Android/app/build/intermediates/javac/debug/classes/com/donfyy/crowds/asm
-        ClassReader classReader = new ClassReader(new FileInputStream(new File("build/intermediates/javac/debug/classes/com/donfyy/crowds/asm/XxxPlugin$XxxRequest.class")));
+        ClassReader pluginClassReader = new ClassReader(new FileInputStream(new File("build/intermediates/javac/debug/classes/com/donfyy/crowds/asm/XxxPlugin.class")));
+        ClassReader requestClassReader = new ClassReader(new FileInputStream(new File("build/intermediates/javac/debug/classes/com/donfyy/crowds/asm/XxxPlugin$XxxRequest.class")));
         ClassVisitor visitor = new ClassVisitor(Opcodes.ASM5) {
             @Override
             public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
@@ -44,7 +85,7 @@ public class AsmTest {
 
             @Override
             public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
-                System.out.println("access:" + access + " name:" + name + " descriptor:" + descriptor + " signature:" + signature + " value:" + value);
+                System.out.println("visit field access:" + access + " name:" + name + " descriptor:" + descriptor + " signature:" + signature + " value:" + value);
                 FieldVisitor innerVisitor = super.visitField(access, name, descriptor, signature, value);
                 FieldVisitor fieldVisitor = new FieldVisitor(api, innerVisitor) {
 
@@ -109,7 +150,55 @@ public class AsmTest {
 
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-                return super.visitMethod(access, name, descriptor, signature, exceptions);
+                System.out.println("MethodVisitor access:" + access + " name:" + name + " descriptor:" + descriptor + " signature:" + signature + " exceptions:" + Arrays.toString(exceptions));
+                MethodVisitor superMV = super.visitMethod(access, name, descriptor, signature, exceptions);
+                return new MethodVisitor(api, superMV) {
+                    @Override
+                    public AnnotationVisitor visitTypeAnnotation(int typeRef, TypePath typePath, String descriptor, boolean visible) {
+                        System.out.println("MethodVisitor visitTypeAnnotation, typeRef:" + typeRef + " typePath:" + typePath + " descriptor:" + descriptor + " visible:" + visible);
+                        return super.visitTypeAnnotation(typeRef, typePath, descriptor, visible);
+                    }
+
+                    @Override
+                    public void visitParameter(String name1, int access1) {
+                        System.out.println("MethodVisitor visitParameter, name:" + name1 + " access:" + access1);
+                        super.visitParameter(name1, access1);
+                    }
+
+                    @Override
+                    public void visitInsn(int opcode) {
+                        super.visitInsn(opcode);
+                    }
+
+                    @Override
+                    public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
+                        System.out.println("MethodVisitor visitAnnotation:" + descriptor);
+                        return new AnnotationVisitor(api, super.visitAnnotation(descriptor, visible)) {
+                            @Override
+                            public void visit(String name, Object value) {
+                                System.out.println("MethodVisitor visitAnnotation name:" + name + " value");
+                                super.visit(name, value);
+                            }
+
+                            @Override
+                            public AnnotationVisitor visitArray(String name) {
+                                System.out.println("MethodVisitor visitArray name:" + name );
+                                return new AnnotationVisitor(api, super.visitArray(name)) {
+                                    @Override
+                                    public void visit(String name, Object value) {
+                                        System.out.println("MethodVisitor visitArray name:" + name + " value:" + value);
+                                        super.visit(name, value);
+                                    }
+                                };
+                            }
+                        };
+                    }
+
+                    @Override
+                    public void visitEnd() {
+                        super.visitEnd();
+                    }
+                };
             }
 
             @Override
@@ -117,7 +206,8 @@ public class AsmTest {
                 super.visitEnd();
             }
         };
-        classReader.accept(visitor, 0);
+        requestClassReader.accept(visitor, 0);
+        pluginClassReader.accept(visitor, 0);
     }
 
 
