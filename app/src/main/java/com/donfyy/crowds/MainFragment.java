@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
+import android.text.method.TextKeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,9 +119,15 @@ public class MainFragment extends Fragment {
                     .replace(R.id.activity_container, new ViewPagerFragment())
                     .commit();
         });
-//        EditText editText = (EditText) view.findViewById(R.id.editText);
+        EditText editText = (EditText) view.findViewById(R.id.editText);
+        editText.setKeyListener(DigitsKeyListener.getInstance("0123456789X"));
+        editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
+//        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+//        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+//        editText.setKeyListener(DigitsKeyListener.getInstance("0123456789-,."));
 //        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 //        editText.setInputType(InputT);
+
     }
 
     @Override

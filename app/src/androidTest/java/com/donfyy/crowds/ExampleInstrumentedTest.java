@@ -53,5 +53,7 @@ public class ExampleInstrumentedTest {
         assertTrue(uri1.getScheme(), "ttfile".equals(uri1.getScheme()));
         assertTrue(uri1.getAuthority(), "user".equals(uri1.getAuthority()));
         assertTrue(uri1.getPath(),"/1634542614546_滴滴出行行程报销单[12].pdf".equals(uri1.getPath()));
+        Uri parse = Uri.parse("https:/xxx.com");
+        assertTrue(uri.getPath(), "https:/xxx.com".equals(parse.getPath()));
     }
 }

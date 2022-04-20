@@ -1,6 +1,7 @@
 package com.donfyy.crowds;
 
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.webkit.CookieManager;
 
 import org.junit.Test;
@@ -33,6 +34,13 @@ public class ExampleUnitTest {
             callBack.onResult(new MyResponse());
             CookieManager.getInstance().flush();
         }
+    }
+
+    @Test
+    public void testArrayMap() {
+        ArrayMap<String, String> map = new ArrayMap<>();
+        map.put("abc", null);
+        System.out.println(map.get("abc"));
     }
 
     @Test
