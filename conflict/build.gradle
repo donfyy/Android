@@ -50,7 +50,7 @@ dependencies {
     implementation files('libs/nineoldandroids.jar')
     implementation 'com.tencent.tbs.tbssdk:sdk:43697'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    compile('com.alibaba.android:vlayout:1.2.12@aar') {
+    implementation('com.alibaba.android:vlayout:1.2.12@aar') {
         transitive = true
     }
     testImplementation rootProject.ext.dependencies.junit
