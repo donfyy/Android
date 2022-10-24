@@ -2,7 +2,9 @@ package com.donfyy.skin
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.donfyy.skin.fragment.MusicFragment
@@ -20,7 +22,8 @@ class MainActivity : AppCompatActivity() {
         val viewPager = findViewById<ViewPager>(R.id.viewPager)
         val fragments = mutableListOf(MusicFragment(), VideoFragment(), RadioFragment())
         val fragmentTitles = mutableListOf("音乐", "视频", "电台");
-        viewPager.adapter = MyFragmentPagerAdapter(supportFragmentManager, fragments, fragmentTitles)
+        viewPager.adapter =
+            MyFragmentPagerAdapter(supportFragmentManager, fragments, fragmentTitles)
         tabLayout.setupWithViewPager(viewPager)
     }
 

@@ -22,6 +22,11 @@ android {
         versionName rootProject.ext.versionName
 
         testInstrumentationRunner rootProject.ext.testInstrumentationRunner
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [eventBusIndex: 'com.donfyy.androidcrowds.MyEventBusIndex']
+            }
+        }
     }
     buildTypes {
         release {
@@ -33,6 +38,7 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+
     buildFeatures {
         dataBinding true
     }
@@ -53,9 +59,10 @@ dependencies {
     androidTestImplementation rootProject.ext.dependencies.espressoCore
     implementation rootProject.ext.dependencies.biometric
     implementation rootProject.ext.dependencies.viewPagerTransforms
-
     def nav_version = "2.3.0-alpha05"
-
+    def eventbus_version = '3.2.0'
+    implementation "org.greenrobot:eventbus:$eventbus_version"
+    annotationProcessor "org.greenrobot:eventbus-annotation-processor:$eventbus_version"
     // Java language implementation
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"

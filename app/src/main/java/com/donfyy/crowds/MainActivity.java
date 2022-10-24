@@ -6,12 +6,16 @@ import android.os.Debug;
 import android.os.Handler;
 import android.util.ArrayMap;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
 import androidx.databinding.DataBindingUtil;
 
 import com.donfyy.crowds.databinding.ActivityMainBindingImpl;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 import java.util.concurrent.Executor;
@@ -34,9 +38,21 @@ public class MainActivity extends AppCompatActivity implements HasFragmentInject
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
 
+    @Subscribe()
+    public void onTest(TestEvent event) {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
+        EventBus.getDefault().register(this);
 
         super.onCreate(savedInstanceState);
 
@@ -60,6 +76,13 @@ public class MainActivity extends AppCompatActivity implements HasFragmentInject
 //        biometric();
         
         testHashMap();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new TextView(MainActivity.this).setText("hhh");
+                Log.i("hhhhhh", "view run in subthread");
+            }
+        }).start();
     }
 
     private void testHashMap() {
