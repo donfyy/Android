@@ -1,9 +1,14 @@
 package com.donfyy.crowds;
 
+import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
 import android.view.Choreographer;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.donfyy.crowds.dagger.DaggerAppComponent;
 
